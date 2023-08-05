@@ -1,5 +1,5 @@
 import asyncio
-from backend.app.services.users_service import create_user
+from .services.users_service import create_user
 
 
 def main():

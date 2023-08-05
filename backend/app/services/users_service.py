@@ -1,6 +1,6 @@
 from typing import Dict, Any
-from backend.app.db.models import User, Course, Review
-from backend.app.db.database import user_collection
+from ..db.models import User, Course, Review
+from ..db.database import user_collection
 
 
 async def create_user(user_data: Dict[str, Any]) -> Dict[str, Any]:
