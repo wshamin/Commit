@@ -10,7 +10,7 @@ class Material(BaseModel):
 
 
 class User(BaseModel):
-    id: Optional[str] = Field(alias='_id')
+    id: Optional[str] = Field(default=None, alias='_id')
     email: str
     password: str
     name: str
