@@ -19,11 +19,11 @@ class User(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    email: Optional[str]
-    password: Optional[str]
-    name: Optional[str]
-    role: Optional[str]
-    courses: Optional[List[str]]
+    email: Optional[str] = None
+    password: Optional[str] = None
+    name: Optional[str] = None
+    role: Optional[str] = None
+    courses: Optional[List[str]] = None
 
 
 class Course(BaseModel):
