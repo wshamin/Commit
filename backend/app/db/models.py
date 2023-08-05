@@ -18,6 +18,14 @@ class User(BaseModel):
     courses: List[str]
 
 
+class UserUpdate(BaseModel):
+    email: Optional[str]
+    password: Optional[str]
+    name: Optional[str]
+    role: Optional[str]
+    courses: Optional[List[str]]
+
+
 class Course(BaseModel):
     id: Optional[str] = Field(alias='_id')
     title: str
