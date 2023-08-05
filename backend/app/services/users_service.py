@@ -4,10 +4,7 @@ from ..db.database import user_collection
 
 
 async def create_user(user_data: Dict[str, Any]) -> Dict[str, Any]:
-    user = User(**user_data)
-    # Создаем ключи в словаре согласно алиасам с помощью by_alias=True.
-    # Это позволяет возвращаемому словарю использовать _id в качестве ключа для значения id,
-    # т.к. в MongoDB у каждого документа есть значение _id.
-    result = await user_collection.insert_one(user.model_dump(by_alias=True))
-    new_user = await user_collection.find_one({'_id': result.inserted_id})
+    result = user_collection.insert_one(user_data)
+    new_user_id = result.inserted_id
+    new_user = user_collection.find_one({"_id": new_user_id})
     return new_user
