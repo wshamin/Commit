@@ -36,8 +36,7 @@ async def update_user(user_id: str, user_data: Dict[str, Any]) -> Union[dict, No
     if not user_in_db:
         return None
 
-    user_update_obj = UserUpdate(**user_data)
-    user_data = user_update_obj.model_dump(exclude_none=True)
+    user_data = UserUpdate(**user_data).model_dump(exclude_none=True)
     updated_user = await user_collection.update_one({'_id': user_id}, {'$set': user_data})
     if updated_user:
         return await user_collection.find_one({'_id': user_id})
