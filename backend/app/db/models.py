@@ -14,6 +14,16 @@ class PyObjectId(ObjectId):
             raise ValueError('Invalid ObjectId')
         return str(v)
 
+    # Указываем Pydantic, как должна выглядеть схема для кастомного типа,
+    # чтобы избежать ошибки с ее автоматической генерацией
+    @classmethod
+    def __get_pydantic_core_schema__(cls, _: "SchemaGenerator") -> dict:
+        return {
+            "title": "ObjectId",
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+        }
+
 
 class Material(BaseModel):
     id: Optional[str] = Field(alias='_id')
