@@ -14,8 +14,8 @@ class PyObjectId(ObjectId):
             raise ValueError('Invalid ObjectId')
         return str(v)
 
-    # Указываем Pydantic, как должна выглядеть схема для кастомного типа,
-    # чтобы избежать ошибки с ее автоматической генерацией
+    # Указываем Pydantic, как должна выглядеть схема для ObjectID,
+    # т.к. он не знает его "из коробки"
     @classmethod
     def __get_pydantic_core_schema__(cls, _: "SchemaGenerator") -> dict:
         return {
