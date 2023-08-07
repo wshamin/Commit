@@ -1,5 +1,18 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
+from bson import ObjectId
+
+
+class PyObjectId(ObjectId):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not ObjectId.is_valid(v):
+            raise ValueError('Invalid ObjectId')
+        return str(v)
 
 
 class Material(BaseModel):
@@ -10,7 +23,7 @@ class Material(BaseModel):
 
 
 class User(BaseModel):
-    id: Optional[str] = Field(default=None, alias='_id')
+    id: Optional[PyObjectId] = Field(default=None, alias='_id')
     email: str
     password: str
     name: str
