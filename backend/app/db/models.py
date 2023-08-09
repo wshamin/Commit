@@ -1,21 +1,8 @@
-from typing import List, Optional
-from pydantic import Field, BaseModel
-import pydantic
-import struct
-from fastapi.encoders import ENCODERS_BY_TYPE
 from bson import ObjectId
-
+from pydantic import BaseModel, Field, EmailStr
+from typing import List, Optional
 
 class PyObjectId(ObjectId):
-    # fix for FastApi/docs
-    __origin__ = pydantic.typing.Literal
-    __args__ = (str,)
-
-    @property
-    def timestamp(self):
-        timestamp = struct.unpack(">I", self.binary[0:4])[0]
-        return timestamp
-
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
@@ -23,54 +10,77 @@ class PyObjectId(ObjectId):
     @classmethod
     def validate(cls, v):
         if not ObjectId.is_valid(v):
-            raise ValueError('Invalid ObjectId')
-        return str(v)
+            raise ValueError("Invalid objectid")
+        return ObjectId(v)
 
-
-ENCODERS_BY_TYPE[ObjectId] = str
-ENCODERS_BY_TYPE[PyObjectId] = str
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
 
 
 class Material(BaseModel):
-    id: Optional[PyObjectId] = Field(default=None, alias='_id')
+    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
     filename: str
     filetype: str
     url: str
 
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
 
 class User(BaseModel):
-    id: Optional[PyObjectId] = Field(default=None, alias='_id')
-    email: str
+    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
+    email: EmailStr
     password: str
     name: str
     role: str
     courses: List[str]
 
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
 
 class UserUpdate(BaseModel):
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     password: Optional[str] = None
     name: Optional[str] = None
     role: Optional[str] = None
     courses: Optional[List[str]] = None
 
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
 
 class Course(BaseModel):
-    id: Optional[PyObjectId] = Field(default=None, alias='_id')
+    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
     title: str
     description: str
-    materials: List[str]
+    materials: List[Material]
     cost: float
-    owner: ObjectId
+    owner: str
     students: List[str]
     reviews: List[str]
 
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
 
 class Review(BaseModel):
-    id: Optional[PyObjectId] = Field(default=None, alias='_id')
+    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
     course: str
     user: str
     text: str
     rating: int
     response: str
 
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
