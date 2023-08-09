@@ -1,12 +1,9 @@
 from typing import List, Optional
-from typing_extensions import Annotated
 from pydantic import Field, BaseModel
-from pydantic.functional_validators import AfterValidator
-import pydantic.json
+from fastapi.encoders import ENCODERS_BY_TYPE
 from bson import ObjectId
 
-# Исправляет ошибку сериализации ObjectID для Pydantic
-pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
+ENCODERS_BY_TYPE[ObjectId] = str
 
 
 class PyObjectId(ObjectId):
