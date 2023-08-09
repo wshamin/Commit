@@ -1,12 +1,20 @@
 from typing import List, Optional
 from pydantic import Field, BaseModel
+import struct
 from fastapi.encoders import ENCODERS_BY_TYPE
 from bson import ObjectId
 
-ENCODERS_BY_TYPE[ObjectId] = str
-
 
 class PyObjectId(ObjectId):
+    # fix for FastApi/docs
+    __origin__ = pydantic.typing.Literal
+    __args__ = (str,)
+
+    @property
+    def timestamp(self):
+        timestamp = struct.unpack(">I", self.binary[0:4])[0]
+        return timestamp
+
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
@@ -16,6 +24,10 @@ class PyObjectId(ObjectId):
         if not ObjectId.is_valid(v):
             raise ValueError('Invalid ObjectId')
         return str(v)
+
+
+ENCODERS_BY_TYPE[ObjectId] = str
+ENCODERS_BY_TYPE[PyObjectId] = str
 
 
 class Material(BaseModel):
