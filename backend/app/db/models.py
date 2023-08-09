@@ -1,44 +1,33 @@
-from pydantic import BaseModel, Field
 from typing import List, Optional
-from bson import ObjectId
+from typing_extensions import Annotated
+from pydantic import Field, BaseModel
+from pydantic.functional_validators import AfterValidator
+from bson import ObjectId as _ObjectId
 
 
-class PyObjectId(ObjectId):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
+def check_object_id(value: str) -> str:
+    if not _ObjectId.is_valid(value):
+        raise ValueError('Invalid ObjectId')
+    return value
 
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError('Invalid ObjectId')
-        return str(v)
 
-    # Указываем Pydantic, как должна выглядеть схема для ObjectID,
-    # т.к. он не знает его "из коробки"
-    @classmethod
-    def __get_pydantic_core_schema__(cls, _: "SchemaGenerator") -> dict:
-        return {
-            "title": "ObjectId",
-            "type": "string",
-            "pattern": "^[0-9a-fA-F]{24}$",
-        }
+ObjectId = Annotated[str, AfterValidator(check_object_id)]
 
 
 class Material(BaseModel):
-    id: Optional[str] = Field(alias='_id')
+    id: Optional[ObjectId] = Field(alias='_id')
     filename: str
     filetype: str
     url: str
 
 
 class User(BaseModel):
-    id: Optional[PyObjectId] = Field(default=None, alias='_id')
+    id: Optional[ObjectId] = Field(default=None, alias='_id')
     email: str
     password: str
     name: str
     role: str
-    courses: List[str]
+    courses: List[ObjectId]
 
 
 class UserUpdate(BaseModel):
@@ -46,24 +35,25 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     name: Optional[str] = None
     role: Optional[str] = None
-    courses: Optional[List[str]] = None
+    courses: Optional[List[ObjectId]] = None
 
 
 class Course(BaseModel):
-    id: Optional[str] = Field(alias='_id')
+    id: Optional[ObjectId] = Field(alias='_id')
     title: str
     description: str
     materials: List[Material]
     cost: float
-    owner: str
-    students: List[str]
-    reviews: List[str]
+    owner: ObjectId
+    students: List[ObjectId]
+    reviews: List[ObjectId]
 
 
 class Review(BaseModel):
-    id: Optional[str] = Field(alias='_id')
-    course: str
-    user: str
+    id: Optional[ObjectId] = Field(alias='_id')
+    course: ObjectId
+    user: ObjectId
     text: str
     rating: int
     response: str
+
