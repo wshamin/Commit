@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import Field, BaseModel
+import pydantic
 import struct
 from fastapi.encoders import ENCODERS_BY_TYPE
 from bson import ObjectId
