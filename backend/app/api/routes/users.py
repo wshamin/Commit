@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, status
+from fastapi import APIRouter
 from ...db.models import User
 from ...db.database import user_collection
 from ...schema.schemas import list_serial
@@ -21,3 +21,8 @@ async def post_user(user: User):
 @router.put('/users/{id}')
 async def put_user(id: str, user: User):
     user_collection.find_one_and_update({'_id': ObjectId(id)}, {'$set': dict(user)})
+
+
+@router.delete('/users/{id}')
+async def delete_user(id: str):
+    user_collection.find_one_and_update({'id': ObjectId(id)})
