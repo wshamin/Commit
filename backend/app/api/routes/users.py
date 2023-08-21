@@ -9,8 +9,8 @@ router = APIRouter()
 
 @router.get('/users/')
 async def get_users():
-    users = list_serial(user_collection.find())
-    return users
+    users = await user_collection.find().to_list(None)
+    return list_serial(users)
 
 
 @router.post('/users/')
