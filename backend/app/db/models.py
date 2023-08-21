@@ -1,18 +1,20 @@
 from bson import ObjectId as _ObjectId
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, Field, EmailStr, validator
 from typing import List, Optional
 
 
-def check_object_id(cls, value: str) -> str:
+def check_object_id(value: str) -> str:
     if not _ObjectId.is_valid(value):
         raise ValueError('Invalid ObjectId')
     return value
 
 
 class PyObjectId(str):
-    @field_validator("check_object_id", pre=True, each_item=False)
+
+    @validator("check_object_id", pre=True, each_item=False)
+    @classmethod
     def validate_object_id(cls, v: str) -> str:
-        return check_object_id(cls, v)
+        return check_object_id(v)
 
     @classmethod
     def __get_pydantic_json_schema__(cls, field_schema):
