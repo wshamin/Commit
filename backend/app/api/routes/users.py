@@ -26,6 +26,7 @@ async def put_user(id: str, user: User):
 @router.delete('/users/{id}')
 async def delete_user(id: str):
     user = await user_collection.fine_one({"_id": ObjectId(id)})
+    print(user)
     if user:
         await user_collection.delete_one({"_id": ObjectId(id)})
         return {"message": "Student deleted"}
