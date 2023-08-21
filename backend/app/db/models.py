@@ -19,9 +19,9 @@ class UpdateUser(BaseModel):
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str}
-        schema_extra = {
+        json_schema_extra = {
             "example": {
-                "name": "Viktor Shamin",
+                "name": "username",
                 "email": "weshamin@gmail.com",
                 "password": "test1234",
                 "role": "admin",

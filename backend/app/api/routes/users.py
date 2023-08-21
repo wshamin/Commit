@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from ...db.models import User
 from ...db.database import user_collection
-from ...schema.schemas import list_serial
+from ...schema.schemas import users_to_dict_list
 from bson import ObjectId
 
 router = APIRouter()
@@ -10,7 +10,7 @@ router = APIRouter()
 @router.get('/users/')
 async def get_users():
     users = await user_collection.find().to_list(None)
-    return list_serial(users)
+    return users_to_dict_list(users)
 
 
 @router.post('/users/')
@@ -29,6 +29,6 @@ async def delete_user(id: str):
     print(user)
     if user:
         await user_collection.delete_one({"_id": ObjectId(id)})
-        return {"message": "Student deleted"}
+        return {"message": "Пользователь удален"}
     else:
-        return {"message": "Student not found"}
+        return {"message": "Пользователь не найден"}
