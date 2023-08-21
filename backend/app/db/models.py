@@ -1,6 +1,6 @@
 from bson import ObjectId
-from pydantic import BaseModel, Field, EmailStr, field_validator, GetJsonSchemaHandler
-from typing import List, Optional, Dict, Any
+from pydantic import BaseModel, Field, EmailStr, GetJsonSchemaHandler
+from typing import Optional, Dict, Any
 
 
 class PyObjectId(BaseModel):
@@ -24,24 +24,12 @@ class PyObjectId(BaseModel):
         return json_schema
 
 
-# class Material(BaseModel):
-#     id: PyObjectId = Field(default_factory=ObjectId, alias='_id')
-#     filename: str
-#     filetype: str
-#     url: str
-#
-#     class Config:
-#         populate_by_name = True
-#         arbitrary_types_allowed = True
-#         json_encoders = {ObjectId: str}
-
-
 class UserModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
-    name: str
-    email: EmailStr
-    password: str
-    role: str
+    name: str = Field(...)
+    email: EmailStr = Field(...)
+    password: str = Field(...)
+    role: str = Field(...)
 
     class Config:
         populate_by_name = True
@@ -65,7 +53,6 @@ class UpdateUserModel(BaseModel):
 
     class Config:
         populate_by_name = True
-        arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
@@ -75,33 +62,3 @@ class UpdateUserModel(BaseModel):
                 "role": "admin",
             }
         }
-
-
-# class Course(BaseModel):
-#     id: PyObjectId = Field(default_factory=ObjectId, alias='_id')
-#     title: str
-#     description: str
-#     materials: List[Material]
-#     cost: float
-#     owner: str
-#     students: List[str]
-#     reviews: List[str]
-#
-#     class Config:
-#         populate_by_name = True
-#         arbitrary_types_allowed = True
-#         json_encoders = {ObjectId: str}
-#
-#
-# class Review(BaseModel):
-#     id: PyObjectId = Field(default_factory=ObjectId, alias='_id')
-#     course: str
-#     user: str
-#     text: str
-#     rating: int
-#     response: str
-#
-#     class Config:
-#         populate_by_name = True
-#         arbitrary_types_allowed = True
-#         json_encoders = {ObjectId: str}
