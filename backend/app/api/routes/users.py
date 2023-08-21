@@ -1,15 +1,23 @@
 from fastapi import APIRouter, Body, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
-from ...db.models import UserModel
-from ...db.database import user_collection as db
+from ...db.models import User
+from ...db.database import user_collection
+from ...schema.schemas import list_serial
+from bson import ObjectId
 
 router = APIRouter()
 
 
-@router.post('/users/', response_description="Add new user", response_model=UserModel)
-async def create_new_user(user: UserModel = Body(...)):
-    user = jsonable_encoder(user)
-    new_user = await db["users"].insert_one(user)
-    created_student = await db["users"].find_one({"_id": new_user.inserted_id})
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_student)
+@router.get('/users/')
+async def get_users():
+    users = list_serial(user_collection.find())
+    return users
+
+
+@router.post('/users/')
+async def post_user(user: User):
+    user_collection.insert_one(dict(user))
+
+
+@router.put('/users/{id}')
+async def put_user(id: str, user: User):
+    user_collection.find_one_and_update({'_id': ObjectId(id)}, {'$set': dict(user)})
