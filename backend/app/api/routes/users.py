@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ...db.models import User, Response
+from ...db.models import User
 from ...db.database import user_collection
 from ...schema.schemas import list_serial
 from bson import ObjectId
