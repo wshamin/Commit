@@ -25,4 +25,4 @@ async def put_user(id: str, user: User):
 
 @router.delete('/users/{id}')
 async def delete_user(id: str):
-    user_collection.find_one_and_update({'id': ObjectId(id)})
+    user_collection.delete_one({'_id': id})
