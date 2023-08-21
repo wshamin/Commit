@@ -1,6 +1,8 @@
 from bson import ObjectId
-from pydantic import BaseModel, Field, EmailStr, GetJsonSchemaHandler
-from typing import Optional, Dict, Any
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, TypeVar
+
+T = TypeVar('T')
 
 
 class User(BaseModel):
@@ -27,3 +29,10 @@ class UpdateUser(BaseModel):
                 "role": "admin",
             }
         }
+
+
+class Response(BaseModel):
+    code: str
+    status: str
+    message: str
+    result: Optional[T] = None
