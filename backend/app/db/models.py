@@ -1,17 +1,18 @@
-from bson import ObjectId
-from pydantic import BaseModel, Field, EmailStr
+from bson import ObjectId as _ObjectId
+from pydantic import BaseModel, Field, EmailStr, field_validator
 from typing import List, Optional
 
-class PyObjectId(ObjectId):
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
 
-    @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError('Invalid ObjectID')
-        return ObjectId(v)
+def check_object_id(cls, value: str) -> str:
+    if not _ObjectId.is_valid(value):
+        raise ValueError('Invalid ObjectId')
+    return value
+
+
+class PyObjectId(str):
+    @field_validator("check_object_id", pre=True, each_item=False)
+    def validate_object_id(cls, v: str) -> str:
+        return check_object_id(cls, v)
 
     @classmethod
     def __get_pydantic_json_schema__(cls, field_schema):
@@ -20,7 +21,7 @@ class PyObjectId(ObjectId):
 
 
 class Material(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
+    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
     filename: str
     filetype: str
     url: str
@@ -28,11 +29,11 @@ class Material(BaseModel):
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+        json_encoders = {_ObjectId: str}
 
 
 class User(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
+    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
     email: EmailStr
     password: str
     name: str
@@ -42,7 +43,7 @@ class User(BaseModel):
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+        json_encoders = {_ObjectId: str}
 
 
 class UserUpdate(BaseModel):
@@ -54,11 +55,11 @@ class UserUpdate(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+        json_encoders = {_ObjectId: str}
 
 
 class Course(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
+    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
     title: str
     description: str
     materials: List[Material]
@@ -70,11 +71,11 @@ class Course(BaseModel):
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+        json_encoders = {_ObjectId: str}
 
 
 class Review(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
+    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
     course: str
     user: str
     text: str
@@ -84,4 +85,4 @@ class Review(BaseModel):
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+        json_encoders = {_ObjectId: str}
