@@ -25,5 +25,9 @@ async def put_user(id: str, user: User):
 
 @router.delete('/users/{id}')
 async def delete_user(id: str):
-    user_collection.delete_one({'_id': id})
-    return Response(code=200, status="Ok", message="Success delete data").dict(exclude_none=True)
+    user = await user_collection.fine_one({"_id": ObjectId(id)})
+    if user:
+        await user_collection.delete_one({"_id": ObjectId(id)})
+        return {"message": "Student deleted"}
+    else:
+        return {"message": "Student not found"}
