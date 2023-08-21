@@ -1,18 +1,18 @@
-from bson import ObjectId as _ObjectId
+from bson import ObjectId
 from pydantic import BaseModel, Field, EmailStr, field_validator, GetJsonSchemaHandler
 from typing import List, Optional, Dict, Any
 
 
-def check_object_id(value: str) -> str:
-    if not _ObjectId.is_valid(value):
-        raise ValueError('Invalid ObjectId')
-    return value
-
-
 class PyObjectId(BaseModel):
-    @field_validator('check_object_id')
-    def validate_object_id(cls, v: str) -> str:
-        return check_object_id(cls, v)
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not ObjectId.is_valid(v):
+            raise ValueError('Invalid ObjectId')
+        return ObjectId(v)
 
     @classmethod
     def __get_pydantic_json_schema__(
@@ -24,69 +24,84 @@ class PyObjectId(BaseModel):
         return json_schema
 
 
-class Material(BaseModel):
-    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
-    filename: str
-    filetype: str
-    url: str
+# class Material(BaseModel):
+#     id: PyObjectId = Field(default_factory=ObjectId, alias='_id')
+#     filename: str
+#     filetype: str
+#     url: str
+#
+#     class Config:
+#         populate_by_name = True
+#         arbitrary_types_allowed = True
+#         json_encoders = {ObjectId: str}
 
-    class Config:
-        populate_by_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {_ObjectId: str}
 
-
-class User(BaseModel):
-    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
+class UserModel(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
+    name: str
     email: EmailStr
     password: str
-    name: str
     role: str
-    courses: List[str]
 
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
-        json_encoders = {_ObjectId: str}
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "Viktor Shamin",
+                "email": "weshamin@gmail.com",
+                "password": "test1234",
+                "role": "admin",
+            }
+        }
 
 
-class UserUpdate(BaseModel):
-    email: Optional[EmailStr] = None
-    password: Optional[str] = None
-    name: Optional[str] = None
-    role: Optional[str] = None
-    courses: Optional[List[str]] = None
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {_ObjectId: str}
-
-
-class Course(BaseModel):
-    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
-    title: str
-    description: str
-    materials: List[Material]
-    cost: float
-    owner: str
-    students: List[str]
-    reviews: List[str]
+class UpdateUserModel(BaseModel):
+    name: Optional[str]
+    email: Optional[EmailStr]
+    password: Optional[str]
+    role: Optional[str]
 
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
-        json_encoders = {_ObjectId: str}
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "Viktor Shamin",
+                "email": "weshamin@gmail.com",
+                "password": "test1234",
+                "role": "admin",
+            }
+        }
 
 
-class Review(BaseModel):
-    id: PyObjectId = Field(default_factory=_ObjectId, alias='_id')
-    course: str
-    user: str
-    text: str
-    rating: int
-    response: str
-
-    class Config:
-        populate_by_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {_ObjectId: str}
+# class Course(BaseModel):
+#     id: PyObjectId = Field(default_factory=ObjectId, alias='_id')
+#     title: str
+#     description: str
+#     materials: List[Material]
+#     cost: float
+#     owner: str
+#     students: List[str]
+#     reviews: List[str]
+#
+#     class Config:
+#         populate_by_name = True
+#         arbitrary_types_allowed = True
+#         json_encoders = {ObjectId: str}
+#
+#
+# class Review(BaseModel):
+#     id: PyObjectId = Field(default_factory=ObjectId, alias='_id')
+#     course: str
+#     user: str
+#     text: str
+#     rating: int
+#     response: str
+#
+#     class Config:
+#         populate_by_name = True
+#         arbitrary_types_allowed = True
+#         json_encoders = {ObjectId: str}
