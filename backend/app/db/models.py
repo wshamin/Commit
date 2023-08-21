@@ -1,6 +1,6 @@
 from bson import ObjectId as _ObjectId
-from pydantic import BaseModel, Field, EmailStr, validator
-from typing import List, Optional
+from pydantic import BaseModel, Field, EmailStr, field_validator, GetJsonSchemaHandler
+from typing import List, Optional, Dict, Any
 
 
 def check_object_id(value: str) -> str:
@@ -9,17 +9,19 @@ def check_object_id(value: str) -> str:
     return value
 
 
-class PyObjectId(str):
-
-    @validator("check_object_id", pre=True, each_item=False)
-    @classmethod
+class PyObjectId(BaseModel):
+    @field_validator('check_object_id')
     def validate_object_id(cls, v: str) -> str:
-        return check_object_id(v)
+        return check_object_id(cls, v)
 
     @classmethod
-    def __get_pydantic_json_schema__(cls, field_schema):
-        field_schema.update(type='string')
-        return field_schema
+    def __get_pydantic_json_schema__(
+        cls, core_schema: Dict[str, Any], handler: GetJsonSchemaHandler
+    ) -> Dict[str, Any]:
+        json_schema = super().__get_pydantic_json_schema__(core_schema, handler)
+        json_schema = handler.resolve_ref_schema(json_schema)
+        json_schema.update(type='string')
+        return json_schema
 
 
 class Material(BaseModel):
@@ -29,7 +31,7 @@ class Material(BaseModel):
     url: str
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {_ObjectId: str}
 
@@ -43,7 +45,7 @@ class User(BaseModel):
     courses: List[str]
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {_ObjectId: str}
 
@@ -71,7 +73,7 @@ class Course(BaseModel):
     reviews: List[str]
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {_ObjectId: str}
 
@@ -85,6 +87,6 @@ class Review(BaseModel):
     response: str
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {_ObjectId: str}
