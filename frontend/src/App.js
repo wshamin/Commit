@@ -1,23 +1,6 @@
-// import logo from './logo.svg';
-import './App.css';
-
-function MyButton() {
-  return (
-    <button>
-      I'm a button
-    </button>
-  );
-}
-
-export default function MyApp() {
-  return (
-    <div>
-      <h1>Welcome to my app</h1>
-      <MyButton />
-    </div>
-  );
-}
-
+//import logo from './logo.svg';
+//import './App.css';
+//
 // function App() {
 //   return (
 //     <div className="App">
@@ -38,5 +21,25 @@ export default function MyApp() {
 //     </div>
 //   );
 // }
-
+//
 // export default App;
+import React from 'react';
+
+function MyButton() {
+  return (
+    <button>
+      I'm a button
+    </button>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton />
+    </div>
+  );
+}
+
+export default App;
