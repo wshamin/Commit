@@ -26,8 +26,8 @@ function App() {
       <div>
         <h1>Welcome to my app</h1>
         <Routes>
-          <Route exact path="/" component={MyButton} />
-          <Route path="/register" component={Register} />
+          <Route path="/" element={<MyButton />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     </Router>
