@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Register from './components/Register';
 
 function MyButton() {
   return (
@@ -8,15 +9,6 @@ function MyButton() {
         Register
       </button>
     </Link>
-  );
-}
-
-function Register() {
-  return (
-    <div>
-      <h2>Registration Page</h2>
-      {/* Тут будет форма регистрации */}
-    </div>
   );
 }
 

@@ -28,7 +28,7 @@ function Register() {
       alert('Registration failed.');
     }
   };
-
+  
   return (
     <div>
       <h2>Registration Page</h2>
