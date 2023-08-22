@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 function MyButton() {
   return (
@@ -25,10 +25,10 @@ function App() {
     <Router>
       <div>
         <h1>Welcome to my app</h1>
-        <Switch>
+        <Routes>
           <Route exact path="/" component={MyButton} />
           <Route path="/register" component={Register} />
-        </Switch>
+        </Routes>
       </div>
     </Router>
   );
