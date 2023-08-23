@@ -18,17 +18,3 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/api", tags=["users"])
-
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    openapi_schema = get_openapi(
-        title="Your API",
-        version="1.0.0",
-        description="Your API description",
-        routes=app.routes,
-    )
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-app.openapi = custom_openapi
