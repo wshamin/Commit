@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from .api.routes.users import router
 
-app = FastAPI()
+app = FastAPI(docs_url="/api/docs")
 
 origins = [
     "http://127.0.0.1:3000", 
