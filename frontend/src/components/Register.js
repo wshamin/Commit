@@ -20,7 +20,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/', userData);
+      const response = await axios.post('${process.env.REACT_APP_API_URL}users/', userData);
       console.log(response.data);
       alert('User registered!');
     } catch (error) {
