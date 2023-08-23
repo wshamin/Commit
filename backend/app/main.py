@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router, tags=["users"])
+app.include_router(router, prefix="/api", tags=["users"])
 
 def custom_openapi():
     if app.openapi_schema:
