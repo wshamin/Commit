@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [loginData, setLoginData] = useState({
@@ -8,7 +8,7 @@ function Login() {
         password: ""
     });
 
-    const history = useNavigation();
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,7 +27,7 @@ function Login() {
             });
             
             localStorage.setItem("accessToken", response.data.access_token);
-            history.push("/");  // redirect to home page or dashboard
+            navigate("/");
         } catch (error) {
             console.error('Error during login:', error);
             alert('Login failed.');
