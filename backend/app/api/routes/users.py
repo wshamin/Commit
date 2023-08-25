@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from ...core.config import settings
-from ...core.security import create_access_token, verify_password
+from ...core.security import create_access_token, get_password_hash, verify_password
 from ...db.database import user_collection
 from ...db.models import User
 from ...schema.schemas import users_to_dict_list
@@ -24,6 +24,7 @@ async def get_users():
 
 @router.post('/users/')
 async def post_user(user: User):
+    user.password = get_password_hash(user.password)
     user_collection.insert_one(dict(user))
 
 
