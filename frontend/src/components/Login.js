@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigation } from 'react-router-dom';
 
 function Login() {
     const [loginData, setLoginData] = useState({
@@ -8,7 +8,7 @@ function Login() {
         password: ""
     });
 
-    const history = useHistory();
+    const history = useNavigation();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
