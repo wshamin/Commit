@@ -23,6 +23,7 @@ async def get_users():
 async def post_user(user: User):
     user_collection.insert_one(dict(user))
 
+
 @router.post("/token/")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await user_collection.find_one({"email": form_data.username})
