@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from ...core.config import settings
 from ...core.security import create_access_token, get_password_hash, verify_password
 from ...db.database import user_collection
-from ...db.models import User
+from ...db.models import Token, User
 from ...schema.schemas import users_to_dict_list
 
 
@@ -42,7 +42,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token = create_access_token(
         data={"sub": user_obj.email}, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return Token(access_token=access_token, token_type="bearer")
 
 
 @router.put('/users/{id}')
