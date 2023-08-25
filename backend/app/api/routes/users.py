@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from ...db.models import User, Token, TokenData
-from ...core.security import verify_password, get_password_hash, create_access_token
-from ...core.config import settings
 from ...db.database import user_collection
+from ...db.models import User, Token, TokenData
+from ...core.config import settings
+from ...core.security import verify_password, get_password_hash, create_access_token
 from ...schema.schemas import users_to_dict_list
 from bson import ObjectId
 
