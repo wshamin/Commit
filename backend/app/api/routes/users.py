@@ -30,13 +30,17 @@ async def post_user(user: User):
 
 @router.post("/token/")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    print(f"Trying to log in with: {form_data.username}, {form_data.password}")  # DEBUG
     user = await user_collection.find_one({"email": form_data.username})
+    print(f"User found in DB: {user}")  # DEBUG
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
 
     user_obj = User(**user)
-    if not verify_password(form_data.password, user_obj.password):
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    password_verified = verify_password(form_data.password, user_obj.password)
+    print(f"Password verified: {password_verified}")  # DEBUG
+    if not password_verified:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
