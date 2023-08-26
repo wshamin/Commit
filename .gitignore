@@ -1,14 +1,14 @@
 # React
 # dependencies
-/node_modules
-/.pnp
+node_modules
+.pnp
 .pnp.js
 
 # testing
-/coverage
+coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store
@@ -25,5 +25,4 @@ yarn-error.log*
 # Python
 venv/
 *.pyc
-config.py
 .idea/
