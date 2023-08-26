@@ -21,8 +21,10 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
+            const dataToSend = `email=${loginData.email}&password=${loginData.password}`;
+
             const response = await axios.post(`${process.env.REACT_APP_API_URL}token/`, 
-            `username=user@example.com&password=string`, 
+            dataToSend, 
                 {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
