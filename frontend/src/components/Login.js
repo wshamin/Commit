@@ -21,10 +21,14 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}token/`, {
-                username: loginData.email,
-                password: loginData.password
-            });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}token/`, 
+                `username=${encodeURIComponent(loginData.email)}&password=${encodeURIComponent(loginData.password)}`, 
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            );
             
             localStorage.setItem("accessToken", response.data.access_token);
             navigate("/");
