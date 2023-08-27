@@ -21,7 +21,7 @@ function CreateTraining() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const dataToSend = `title=${trainingDataData.title}&description=${trainingDataData.description}`;
+            const dataToSend = `title=${trainingData.title}&description=${trainingData.description}`;
 
             const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend, {
                 headers: {
