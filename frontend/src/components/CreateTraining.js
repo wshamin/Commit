@@ -26,13 +26,7 @@ function CreateTraining() {
                 description: trainingData.description
             };
 
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend, 
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }
-            );
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend);
 
             if (response.status === 201) {
                 alert('Тренинг успешно создан!');

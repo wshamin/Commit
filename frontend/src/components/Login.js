@@ -23,8 +23,7 @@ function Login({ setIsAuthenticated }) {
         try {
             const dataToSend = `username=${loginData.email}&password=${loginData.password}`;
 
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}token/`, 
-            dataToSend, 
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}token/`, dataToSend, 
                 {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
