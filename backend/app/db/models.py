@@ -48,4 +48,4 @@ class Lesson(BaseModel):
 class Training(BaseModel):
     title: str = Field(...)
     description: str = Field(...)
-    lessons: Optional[List[Lesson]]
+    lessons: Optional[List[Lesson]] = []

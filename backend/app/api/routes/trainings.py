@@ -9,9 +9,6 @@ router = APIRouter()
 async def create_training(training: Training):
     training_dict = dict(training)
 
-    if not training_dict.get("lessons"):
-        training_dict["lessons"] = []
-
     if training_dict.get("lessons"):
         training_dict["lessons"] = [dict(lesson) for lesson in training.lessons]
 
