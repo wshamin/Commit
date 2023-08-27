@@ -21,7 +21,9 @@ function CreateTraining() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, trainingData, {
+            const dataToSend = `title=${trainingDataData.title}&description=${trainingDataData.description}`;
+
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
                     'Content-Type': 'application/x-www-form-urlencoded',
