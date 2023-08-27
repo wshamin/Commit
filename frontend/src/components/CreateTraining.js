@@ -28,6 +28,9 @@ function CreateTraining() {
 
             const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend);
 
+            console.log("Response data:", response.data);
+            console.log("Response status:", response.status);
+
             if (response.status === 201) {
                 alert('Тренинг успешно создан!');
                 navigate(`/trainings/${response.data.id}`);
