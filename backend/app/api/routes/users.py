@@ -25,7 +25,7 @@ async def get_users():
 @router.post('/users/')
 async def post_user(user: User):
     user.password = get_password_hash(user.password)
-    user_collection.insert_one(dict(user))
+    await user_collection.insert_one(dict(user))
 
 
 @router.post("/token/")
