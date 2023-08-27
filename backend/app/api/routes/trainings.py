@@ -7,7 +7,12 @@ router = APIRouter()
 
 @router.post("/trainings/")
 async def create_training(training: Training):
-    result = await training_collection.insert_one(dict(training))
+    training_dict = dict(training)
+
+    if training_dict.get("lessons"):
+        training_dict["lessons"] = [dict(lesson) for lesson in training.lessons]
+
+    result = await training_collection.insert_one(training_dict)
     if result:
         return {"id": str(result.inserted_id)}
     else:
