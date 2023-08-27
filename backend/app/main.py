@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api.routes.users import router
+from .api.routes.users import router as user_router 
+from .api.routes.trainings import router as training_router
 
 app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
 
@@ -16,4 +17,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router, prefix="/api", tags=["users"])
+app.include_router(user_router, prefix="/api", tags=["users"])
+app.include_router(training_router, prefix="/api", tags=["trainings"])
