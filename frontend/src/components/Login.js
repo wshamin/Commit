@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ setIsAuthenticated }) {
     const [loginData, setLoginData] = useState({
         email: "",
         password: ""
@@ -33,6 +33,7 @@ function Login() {
             );
             
             localStorage.setItem("accessToken", response.data.access_token);
+            setIsAuthenticated(true);
             navigate("/");
         } catch (error) {
             console.error('Error during login:', error);
