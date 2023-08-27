@@ -21,14 +21,18 @@ function CreateTraining() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const dataToSend = `title=${trainingData.title}&description=${trainingData.description}`;
+            const dataToSend = {
+                title: trainingData.title,
+                description: trainingData.description
+            };
 
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend, 
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            );
 
             if (response.status === 201) {
                 alert('Тренинг успешно создан!');
