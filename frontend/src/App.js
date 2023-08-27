@@ -46,7 +46,7 @@ function App() {
       <div>
         <h1>Welcome to my app</h1>
         <Routes>
-          <Route path="/" element={<MyButton />} />
+          <Route path="/" element={<MyButton isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         </Routes>
