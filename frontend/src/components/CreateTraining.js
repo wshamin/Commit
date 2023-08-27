@@ -24,7 +24,7 @@ function CreateTraining() {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, trainingData, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
             });
 
