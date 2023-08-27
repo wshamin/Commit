@@ -1,6 +1,6 @@
 from bson import ObjectId
 from pydantic import BaseModel, Field, EmailStr
-from typing import Optional
+from typing import List, Optional
 
 
 class User(BaseModel):
@@ -36,3 +36,16 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+
+class Lesson(BaseModel):
+    title: str = Field(...)
+    description: str = Field(...)
+    video_url: str = Field(...)
+    homework: str = Field(...)
+
+
+class Training(BaseModel):
+    title: str = Field(...)
+    description: str = Field(...)
+    lessons: Optional[List[Lesson]]

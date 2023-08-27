@@ -7,14 +7,19 @@ function MyButton({ isAuthenticated, setIsAuthenticated }) {
   return (
     <div>
         {isAuthenticated ? (
-            <Link to="/">
-                <button onClick={() => {
-                    localStorage.removeItem("accessToken");
-                    setIsAuthenticated(false);
-                }}>
-                    Выход
-                </button>
-            </Link>
+            <>
+                <Link to="/">
+                    <button onClick={() => {
+                        localStorage.removeItem("accessToken");
+                        setIsAuthenticated(false);
+                    }}>
+                        Выход
+                    </button>
+                </Link>
+                <Link to="/create-training">
+                    <button>Создать тренинг</button>
+                </Link>
+            </>
         ) : (
             <>
                 <Link to="/register">
@@ -49,6 +54,7 @@ function App() {
           <Route path="/" element={<MyButton isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/create-training" element={<CreateTraining />} />
         </Routes>
       </div>
     </Router>
