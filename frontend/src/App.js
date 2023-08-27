@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Register from './components/Register';
 import Login from './components/Login';
 
-function MyButton() {
+function MyButton({ isAuthenticated, setIsAuthenticated }) {
   return (
     <div>
         {isAuthenticated ? (
