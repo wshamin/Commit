@@ -29,10 +29,12 @@ function CreateTraining() {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend);
             console.log("Response data:", response.data);
 
-            if (response.status === 200) {
+            if (response.status >= 200 && response.status < 300) {
                 alert('Тренинг успешно создан!');
+                console.log("Response status:", response.status);
                 await navigate(`/trainings/${response.data.id}`);
             } else {
+                console.log("Response status:", response.status);
                 alert('Произошла ошибка при создании тренинга.');
             }
         } catch (error) {
