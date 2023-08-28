@@ -27,6 +27,7 @@ function CreateTraining() {
             };
 
             const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend);
+            console.log("Response data:", response.data);
             console.log(response.status);
 
             if (response.status === 200) {
