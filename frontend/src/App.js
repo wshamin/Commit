@@ -44,61 +44,61 @@ async function fetchTrainings() {
 }
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [trainings, setTrainings] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [trainings, setTrainings] = useState([]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    setIsAuthenticated(false);
-  };
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken");
+        setIsAuthenticated(false);
+    };
 
-  useEffect(() => {
-      setIsAuthenticated(!!localStorage.getItem("accessToken"));
-  }, []);
+    useEffect(() => {
+        setIsAuthenticated(!!localStorage.getItem("accessToken"));
+    }, []);
 
-  useEffect(() => {
-    async function fetchTrainings() {
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}trainings/`);
-            setTrainings(response.data);
-        } catch (error) {
-            console.error("Ошибка при получении тренингов:", error);
+    useEffect(() => {
+        async function getTrainings() {
+            try {
+                const response = fetchTrainings();
+                setTrainings(response.data);
+            } catch (error) {
+                console.error("Ошибка при получении тренингов:", error);
+            }
         }
-    }
 
-    fetchTrainings();
-  }, []);
+        getTrainings();
+    }, []);
 
-  return (
-    <Router>
-      <div>
-        <h1>Welcome to my app</h1>
-        <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
-
+    return (
+        <Router>
         <div>
-            {trainings.map(training => (
-                <Link to={`/trainings/${training.id}`} style={{
-                    display: 'block',
-                    width: '100%',  // или другой размер на ваше усмотрение
-                    height: '150px',
-                    border: '2px solid black',
-                    marginBottom: '10px',
-                    padding: '10px'
-                }} key={training.id}>
-                    <h3>{training.title}</h3>
-                    <p>{training.description}</p>
-                </Link>
-            ))}
-        </div>
+            <h1>Welcome to my app</h1>
+            <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
 
-        <Routes>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/create-training" element={<CreateTraining />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+            <div>
+                {trainings.map(training => (
+                    <Link to={`/trainings/${training.id}`} style={{
+                        display: 'block',
+                        width: '30%',  
+                        height: '50px',
+                        border: '2px solid black',
+                        marginBottom: '10px',
+                        padding: '10px'
+                    }} key={training.id}>
+                        <h3>{training.title}</h3>
+                        <p>{training.description}</p>
+                    </Link>
+                ))}
+            </div>
+
+            <Routes>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+            <Route path="/create-training" element={<CreateTraining />} />
+            </Routes>
+        </div>
+        </Router>
+    );
 }
 
 export default App;
