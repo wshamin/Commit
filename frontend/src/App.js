@@ -71,32 +71,32 @@ function App() {
 
     return (
         <Router>
-        <div>
-            <h1>Welcome to my app</h1>
-            <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
-
             <div>
-                {trainings.map(training => (
-                    <Link to={`/trainings/${training.id}`} style={{
-                        display: 'block',
-                        width: '30%',  
-                        height: '50px',
-                        border: '2px solid black',
-                        marginBottom: '10px',
-                        padding: '10px'
-                    }} key={training.id}>
-                        <h3>{training.title}</h3>
-                        <p>{training.description}</p>
-                    </Link>
-                ))}
-            </div>
+                <h1>Welcome to my app</h1>
+                <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
 
-            <Routes>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-            <Route path="/create-training" element={<CreateTraining />} />
-            </Routes>
-        </div>
+                <div>
+                    {trainings.map(training => (
+                        <Link to={`/trainings/${training.id}`} style={{
+                            display: 'block',
+                            width: '30%',
+                            height: '150px',
+                            border: '2px solid black',
+                            marginBottom: '10px',
+                            padding: '10px'
+                        }} key={training.id}>
+                            <h3>{training.title}</h3>
+                            <p>{training.description}</p>
+                        </Link>
+                    ))}
+                </div>
+
+                <Routes>
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+                    <Route path="/create-training" element={<CreateTraining />} />
+                </Routes>
+            </div>
         </Router>
     );
 }
