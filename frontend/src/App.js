@@ -35,7 +35,10 @@ function Navigation({ isAuthenticated, handleLogout }) {
 
 async function fetchTrainings() {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}trainings/`);
+        const headers = {
+            'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
+        };
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}trainings/`, { headers });
         return response.data;
     } catch (error) {
         console.error("Ошибка при получении тренингов:", error);
