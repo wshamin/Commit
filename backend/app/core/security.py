@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from .config import settings, ALGORITHM
+from .config import settings
 from ..db.models import User, TokenData
 from ..db.database import user_collection
 
