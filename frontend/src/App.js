@@ -83,6 +83,7 @@ function App() {
                             height: '150px',
                             border: '2px solid black',
                             marginBottom: '10px',
+                            marginLeft: '30px',
                             padding: '10px'
                         }} key={training.id}>
                             <h3>{training.title}</h3>
