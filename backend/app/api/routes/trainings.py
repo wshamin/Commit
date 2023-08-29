@@ -1,15 +1,16 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Depends, status
 
 from ...db.database import training_collection
-from ...db.models import Training
+from ...db.models import Training, User
 from ...schema.schemas import trainings_to_dict_list
+from ...core.security import get_current_user
 
 
 router = APIRouter()
 
 
 @router.get('/trainings/')
-async def get_trainings():
+async def get_trainings(current_user: User = Depends(get_current_user)):
     trainings = await training_collection.find().to_list(None)
     return trainings_to_dict_list(trainings)
 
