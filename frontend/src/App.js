@@ -103,6 +103,7 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create-training" element={<CreateTraining />} />
+                    <Route path="/trainings/:id" element={<TrainingPage />} />
                 </Routes>
             </div>
         </Router>
