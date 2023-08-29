@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function TrainingPage({ match }) {
     const [training, setTraining] = useState(null);
     const [lessons, setLessons] = useState([]);
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const trainingId = match.params.id;
 
@@ -32,7 +32,7 @@ function TrainingPage({ match }) {
 
     // Функция для перехода на страницу создания урока
     const goToCreateLessonPage = () => {
-        history.push(`/trainings/${trainingId}/create-lesson`);
+        navigate.push(`/trainings/${trainingId}/create-lesson`);
     };
 
     return (
