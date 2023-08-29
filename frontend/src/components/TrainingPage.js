@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function TrainingPage({ match }) {
+function TrainingPage() {
     const [training, setTraining] = useState(null);
     const [lessons, setLessons] = useState([]);
     const navigate = useNavigate();
 
-    const trainingId = match.params.id;
+    const { id: trainingId } = useParams();
 
     useEffect(() => {
         async function fetchTraining() {
@@ -32,7 +32,7 @@ function TrainingPage({ match }) {
 
     // Функция для перехода на страницу создания урока
     const goToCreateLessonPage = () => {
-        navigate.push(`/trainings/${trainingId}/create-lesson`);
+        navigate(`/trainings/${trainingId}/create-lesson`);
     };
 
     return (
