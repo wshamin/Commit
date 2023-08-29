@@ -59,7 +59,7 @@ function App() {
     useEffect(() => {
         async function getTrainings() {
             try {
-                const response = fetchTrainings();
+                const response = await fetchTrainings();
                 setTrainings(response.data);
             } catch (error) {
                 console.error("Ошибка при получении тренингов:", error);
