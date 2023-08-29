@@ -2,8 +2,17 @@ from fastapi import APIRouter, HTTPException, status
 
 from ...db.database import training_collection
 from ...db.models import Training
+from ...schema.schemas import trainings_to_dict_list
+
 
 router = APIRouter()
+
+
+@router.get('/trainings/')
+async def get_trainings():
+    trainings = await training_collection.find().to_list(None)
+    return trainings_to_dict_list(trainings)
+
 
 @router.post("/trainings/")
 async def create_training(training: Training):

@@ -23,7 +23,7 @@ async def get_users():
 
 
 @router.post('/users/')
-async def post_user(user: User):
+async def create_user(user: User):
     user.password = get_password_hash(user.password)
     await user_collection.insert_one(dict(user))
 
@@ -47,7 +47,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.put('/users/{id}')
-async def put_user(id: str, user: User):
+async def update_user(id: str, user: User):
     user_collection.find_one_and_update({'_id': ObjectId(id)}, {'$set': dict(user)})
 
 
