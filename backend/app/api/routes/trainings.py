@@ -32,6 +32,7 @@ async def create_training(training: Training):
 
 @router.get('/trainings/{training_id}/lessons/')
 async def get_lessons(training_id: str):
+    print(training_id)
     training = await training_collection.find_one({'_id': ObjectId(training_id)})
     if training:
         return training['lessons']
