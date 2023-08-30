@@ -15,7 +15,7 @@ function TrainingPage() {
                 const headers = {
                     'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
                 };
-                const trainingResponse = await axios.get(`${process.env.REACT_APP_API_URL}trainings/${trainingId}`, { headers });
+                const trainingResponse = await axios.get(`${process.env.REACT_APP_API_URL}trainings/${trainingId}/`, { headers });
                 const trainingData = trainingResponse.data;
                 
                 const lessonsResponse = await axios.get(`${process.env.REACT_APP_API_URL}trainings/${trainingId}/lessons/`, { headers });
