@@ -46,6 +46,7 @@ class Lesson(BaseModel):
 
 
 class Training(BaseModel):
+    id: Optional[str] = Field(None, alias='_id')
     title: str = Field(...)
     description: str = Field(...)
     lessons: Optional[List[Lesson]] = []

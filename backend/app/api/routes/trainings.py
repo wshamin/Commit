@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from bson import ObjectId
+from bson.errors import InvalidId
 
 from ...db.database import training_collection
 from ...db.models import Training, User, Lesson
@@ -28,6 +29,19 @@ async def create_training(training: Training):
         return {'id': str(result.inserted_id)}
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Training creation failed')
+    
+
+@router.get('/trainings/{training_id}/', response_model=Training)
+async def get_training_by_id(training_id: str):
+    try:
+        training = await training_collection.find_one({'_id': ObjectId(training_id)})
+    except InvalidId:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid training ID")
+
+    if training:
+        return {**training, "_id": str(training["_id"])} 
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Training not found")
 
 
 @router.get('/trainings/{training_id}/lessons/')
