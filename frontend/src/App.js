@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import axios from 'axios';
 
 // Компоненты
 import Register from './components/Register';
@@ -32,22 +31,8 @@ function Navigation({ isAuthenticated, handleLogout }) {
   );
 }
 
-async function fetchTrainings() {
-    try {
-        const headers = {
-            'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
-        };
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}trainings/`, { headers });
-        return response.data;
-    } catch (error) {
-        console.error("Ошибка при получении тренингов:", error);
-        return [];
-    }
-}
-
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [trainings, setTrainings] = useState([]);
 
     const handleLogout = () => {
         localStorage.removeItem("accessToken");
@@ -57,19 +42,6 @@ function App() {
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         setIsAuthenticated(!!token);
-
-        if (token) {
-            async function getTrainings() {
-                try {
-                    const data = await fetchTrainings();
-                    setTrainings(data);
-                } catch (error) {
-                    console.error("Ошибка при получении тренингов:", error);
-                }
-            }
-    
-            getTrainings();
-        }
     }, []);
 
     return (

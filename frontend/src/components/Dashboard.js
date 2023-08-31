@@ -2,6 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Dashboard({ trainings }) {
+    const [trainings, setTrainings] = useState([]);
+
+    useEffect(() => {
+        async function fetchTrainings() {
+            try {
+                const headers = {
+                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
+                };
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}trainings/`, { headers });
+                setTrainings(response.data);
+            } catch (error) {
+                console.error("Ошибка при получении тренингов:", error);
+            }
+        }
+
+        fetchTrainings();
+    }, []);
+
     return (
         <div>
             <h2>Личный кабинет</h2>
