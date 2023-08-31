@@ -6,7 +6,6 @@ import axios from 'axios';
 import Register from './components/Register';
 import Login from './components/Login';
 import CreateTraining from './components/CreateTraining';
-import TrainingPage from './components/TrainingPage';
 
 function Navigation({ isAuthenticated, handleLogout }) {
   return (
@@ -57,20 +56,20 @@ function App() {
     };
 
     useEffect(() => {
-        setIsAuthenticated(!!localStorage.getItem("accessToken"));
-    }, []);
+        const token = localStorage.getItem("accessToken");
+        setIsAuthenticated(!!token);
 
-    useEffect(() => {
-        async function getTrainings() {
-            try {
-                const data = await fetchTrainings();
-                setTrainings(data);
-            } catch (error) {
-                console.error("Ошибка при получении тренингов:", error);
-            }
+        if (token) {
+            (async function getTrainings() {
+                try {
+                    const data = await fetchTrainings();
+                    setTrainings(data);
+                } catch (error) {
+                    console.error("Ошибка при получении тренингов:", error);
+                }
+            })();
         }
 
-        getTrainings();
     }, []);
 
     return (
@@ -80,8 +79,7 @@ function App() {
                 <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
 
                 <div>
-                    if (isAuthenticated) {
-                        trainings.map(training => (
+                    {isAuthenticated && trainings.map(training => (
                             <Link to={`/trainings/${training.id}`} style={{
                                 display: 'block',
                                 width: '30%',
@@ -94,15 +92,13 @@ function App() {
                                 <h3>{training.title}</h3>
                                 <p>{training.description}</p>
                             </Link>
-                        ))
-                    } 
+                        ))}
                 </div>
 
                 <Routes>
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create-training" element={<CreateTraining />} />
-                    <Route path="/trainings/:id" element={<TrainingPage />} />
                 </Routes>
             </div>
         </Router>
