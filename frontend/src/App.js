@@ -81,24 +81,20 @@ function App() {
                 <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
 
                 <div>
-                    {isAuthenticated ? (
-                        trainings.map(training => (
-                            <Link to={`/trainings/${training.id}`} style={{
-                                display: 'block',
-                                width: '30%',
-                                height: '150px',
-                                border: '2px solid black',
-                                marginBottom: '10px',
-                                marginLeft: '30px',
-                                padding: '10px'
-                            }} key={training.id}>
-                                <h3>{training.title}</h3>
-                                <p>{training.description}</p>
-                            </Link>
-                        ))
-                    ) : (
-                        <p>Пожалуйста, авторизуйтесь, чтобы просмотреть тренинги.</p>
-                    )}
+                    {isAuthenticated && trainings.map(training => (
+                        <Link to={`/trainings/${training.id}`} style={{
+                            display: 'block',
+                            width: '30%',
+                            height: '150px',
+                            border: '2px solid black',
+                            marginBottom: '10px',
+                            marginLeft: '30px',
+                            padding: '10px'
+                        }} key={training.id}>
+                            <h3>{training.title}</h3>
+                            <p>{training.description}</p>
+                        </Link>
+                    ))}
                 </div>
 
                 <Routes>
