@@ -57,10 +57,9 @@ function App() {
     };
 
     useEffect(() => {
-        setIsAuthenticated(!!localStorage.getItem("accessToken"));
-    }, []);
+        const token = localStorage.getItem("accessToken");
+        setIsAuthenticated(!!token);
 
-    useEffect(() => {
         async function getTrainings() {
             try {
                 const data = await fetchTrainings();
