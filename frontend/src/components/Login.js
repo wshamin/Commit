@@ -33,7 +33,7 @@ function Login({ setIsAuthenticated }) {
             
             localStorage.setItem("accessToken", response.data.access_token);
             setIsAuthenticated(true);
-            navigate("/");
+            navigate("/dashboard");
         } catch (error) {
             console.error('Error during login:', error);
             alert('Login failed.');

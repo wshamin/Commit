@@ -7,6 +7,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import CreateTraining from './components/CreateTraining';
 import TrainingPage from './components/TrainingPage';
+import Dashboard from './components/Dashboard';
 
 function Navigation({ isAuthenticated, handleLogout }) {
   return (
@@ -15,9 +16,6 @@ function Navigation({ isAuthenticated, handleLogout }) {
             <>
                 <Link to="/">
                     <button onClick={handleLogout}>Выход</button>
-                </Link>
-                <Link to="/create-training">
-                    <button>Создать тренинг</button>
                 </Link>
             </>
         ) : (
@@ -80,28 +78,12 @@ function App() {
                 <h1>Welcome to my app</h1>
                 <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
 
-                <div>
-                    {isAuthenticated && trainings.map(training => (
-                        <Link to={`/trainings/${training.id}`} style={{
-                            display: 'block',
-                            width: '30%',
-                            height: '150px',
-                            border: '2px solid black',
-                            marginBottom: '10px',
-                            marginLeft: '30px',
-                            padding: '10px'
-                        }} key={training.id}>
-                            <h3>{training.title}</h3>
-                            <p>{training.description}</p>
-                        </Link>
-                    ))}
-                </div>
-
                 <Routes>
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create-training" element={<CreateTraining />} />
                     <Route path="/trainings/:id" element={<TrainingPage />} />
+                    <Route path="/dashboard" element={<Dashboard trainings={trainings} />} />
                 </Routes>
             </div>
         </Router>
