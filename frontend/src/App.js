@@ -80,7 +80,7 @@ function App() {
 
                 <div>
                     {isAuthenticated && trainings.map(training => (
-                            <Link to={`/trainings/${training.id}`} style={{
+                            <Link to={`/trainings/${training.id}/`} style={{
                                 display: 'block',
                                 width: '30%',
                                 height: '150px',
