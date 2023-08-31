@@ -80,7 +80,7 @@ function App() {
                 <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
 
                 <div>
-                    {isAuthenticated ? (
+                    if (isAuthenticated) {
                         trainings.map(training => (
                             <Link to={`/trainings/${training.id}`} style={{
                                 display: 'block',
@@ -95,9 +95,7 @@ function App() {
                                 <p>{training.description}</p>
                             </Link>
                         ))
-                    ) : (
-                        <p>Пожалуйста, авторизуйтесь, чтобы просмотреть тренинги.</p>
-                    )}
+                    } 
                 </div>
 
                 <Routes>
