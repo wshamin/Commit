@@ -1,5 +1,3 @@
 FROM nginx
 
-COPY nginx.conf /home/wshamin/Commit/nginx.conf
-
-
+COPY nginx.conf /etc/nginx/nginx.conf
