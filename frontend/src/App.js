@@ -60,16 +60,18 @@ function App() {
         const token = localStorage.getItem("accessToken");
         setIsAuthenticated(!!token);
 
-        async function getTrainings() {
-            try {
-                const data = await fetchTrainings();
-                setTrainings(data);
-            } catch (error) {
-                console.error("Ошибка при получении тренингов:", error);
+        if (token) {
+            async function getTrainings() {
+                try {
+                    const data = await fetchTrainings();
+                    setTrainings(data);
+                } catch (error) {
+                    console.error("Ошибка при получении тренингов:", error);
+                }
             }
+    
+            getTrainings();
         }
-
-        getTrainings();
     }, []);
 
     return (
