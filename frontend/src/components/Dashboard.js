@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Dashboard({ trainings }) {
+function Dashboard() {
     const [trainings, setTrainings] = useState([]);
 
     useEffect(() => {
