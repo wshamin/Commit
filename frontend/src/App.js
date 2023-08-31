@@ -68,8 +68,6 @@ function App() {
                     console.error("Ошибка при получении тренингов:", error);
                 }
             })();
-
-            getTrainings();
         }
 
     }, []);
