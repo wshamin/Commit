@@ -67,6 +67,8 @@ function App() {
                 } catch (error) {
                     console.error("Ошибка при получении тренингов:", error);
                 }
+
+                getTrainings();
             })();
         }
 
