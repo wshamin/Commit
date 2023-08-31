@@ -6,6 +6,7 @@ import axios from 'axios';
 import Register from './components/Register';
 import Login from './components/Login';
 import CreateTraining from './components/CreateTraining';
+import TrainingPage from './components/TrainingPage';
 
 function Navigation({ isAuthenticated, handleLogout }) {
   return (
@@ -103,10 +104,9 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create-training" element={<CreateTraining />} />
+                    <Route path="/trainings/:id" element={<TrainingPage />} />
                 </Routes>
             </div>
         </Router>
     );
 }
-
-export default App;
