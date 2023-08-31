@@ -56,22 +56,20 @@ function App() {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        setIsAuthenticated(!!token);
+        setIsAuthenticated(!!localStorage.getItem("accessToken"));
+    }, []);
 
-        if (token) {
-            (async function getTrainings() {
-                try {
-                    const data = await fetchTrainings();
-                    setTrainings(data);
-                } catch (error) {
-                    console.error("Ошибка при получении тренингов:", error);
-                }
-
-                getTrainings();
-            })();
+    useEffect(() => {
+        async function getTrainings() {
+            try {
+                const data = await fetchTrainings();
+                setTrainings(data);
+            } catch (error) {
+                console.error("Ошибка при получении тренингов:", error);
+            }
         }
 
+        getTrainings();
     }, []);
 
     return (
@@ -81,7 +79,8 @@ function App() {
                 <Navigation isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
 
                 <div>
-                    {isAuthenticated && trainings.map(training => (
+                    {isAuthenticated ? (
+                        trainings.map(training => (
                             <Link to={`/trainings/${training.id}`} style={{
                                 display: 'block',
                                 width: '30%',
@@ -94,14 +93,16 @@ function App() {
                                 <h3>{training.title}</h3>
                                 <p>{training.description}</p>
                             </Link>
-                        ))}
+                        ))
+                    ) : (
+                        <p>Пожалуйста, авторизуйтесь, чтобы просмотреть тренинги.</p>
+                    )}
                 </div>
 
                 <Routes>
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create-training" element={<CreateTraining />} />
-                    <Route path="/trainings/:id" element={<TrainingPage />} />
                 </Routes>
             </div>
         </Router>
