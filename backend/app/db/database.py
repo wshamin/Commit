@@ -1,6 +1,11 @@
+import os
+from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
-client = AsyncIOMotorClient('mongodb://127.0.0.1:27017')
+load_dotenv()
+MONGO_URI = os.getenv("MONGO_URI")
+
+client = AsyncIOMotorClient(MONGO_URI)
 
 db = client['commit']
 

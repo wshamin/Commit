@@ -6,7 +6,7 @@ from .api.routes.trainings import router as training_router
 app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
 
 origins = [
-    "http://127.0.0.1:3000", 
+    "http://127.0.0.1:3000"
 ]
 
 app.add_middleware(
