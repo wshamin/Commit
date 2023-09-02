@@ -59,7 +59,7 @@ function App() {
                     <Route path="/trainings/:id" element={<TrainingPage />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/trainings/:id/create-lesson" element={<CreateLesson />} />
-                    <Route path="/trainings/:trainingId/lessons/:lessonId" component={LessonPage} />
+                    <Route path="/trainings/:trainingId/lessons/:lessonId" element={<LessonPage />} />
                 </Routes>
             </div>
         </Router>
