@@ -5,16 +5,26 @@ services:
     command: npm start
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - node_modules_volume:/app/node_modules
   backend:
     build: ./backend
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: hupper -m uvicorn app.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app
   nginx:
     build: ./nginx
     ports:
       - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
   mongo:
     image: "mongo"
     ports:
       - "27017:27017"
+
+volumes:
+  node_modules_volume:

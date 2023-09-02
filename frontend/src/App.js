@@ -7,6 +7,8 @@ import Login from './components/Login';
 import CreateTraining from './components/CreateTraining';
 import TrainingPage from './components/TrainingPage';
 import Dashboard from './components/Dashboard';
+import CreateLesson from './components/CreateLesson';
+import LessonPage from './components/LessonPage';
 
 function Navigation({ isAuthenticated, handleLogout }) {
   return (
@@ -56,6 +58,8 @@ function App() {
                     <Route path="/create-training" element={<CreateTraining />} />
                     <Route path="/trainings/:id" element={<TrainingPage />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/trainings/:id/create-lesson" element={<CreateLesson />} />
+                    <Route path="/trainings/:trainingId/lessons/:lessonId" component={LessonPage} />
                 </Routes>
             </div>
         </Router>

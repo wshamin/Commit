@@ -16,7 +16,7 @@ def training_to_dict(training) -> dict:
         'id': str(training['_id']),
         'title': training['title'],
         'description': training['description'],
-        'lessons': training['lessons'] if 'lessons' in training else []
+        'lesson_ids': training['lesson_ids'] if 'lesson_ids' in training else []
     }
 
 
@@ -26,10 +26,10 @@ def trainings_to_dict_list(trainings) -> list:
 
 def lesson_to_dict(lesson) -> dict:
     return {
+        'id': str(lesson['_id']),
         'title': lesson['title'],
         'description': lesson['description'],
-        'video_url': lesson['video_url'],
-        'homework': lesson['homework']
+        'video_url': lesson['video_url']
     }
 
 

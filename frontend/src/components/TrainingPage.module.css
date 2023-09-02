@@ -1,0 +1,13 @@
+/* TrainingPage.module.css */
+.lessonBlock {
+    width: 33%;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    margin: 0.5rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.lessonBlock h3 {
+    margin-top: 0;
+}

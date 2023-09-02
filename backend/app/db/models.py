@@ -42,7 +42,6 @@ class Lesson(BaseModel):
     title: str = Field(...)
     description: str = Field(...)
     video_url: str = Field(...)
-    homework: str = Field(...)
 
 
 class Training(BaseModel):

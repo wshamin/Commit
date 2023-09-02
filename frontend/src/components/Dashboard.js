@@ -23,7 +23,7 @@ function Dashboard() {
 
     return (
         <div>
-            <h2>Личный кабинет</h2>
+            <h2>Личный кабинет кикет</h2>
             <Link to="/create-training">
                 <button>Создать тренинг</button>
             </Link>
