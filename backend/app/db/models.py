@@ -42,7 +42,7 @@ class Lesson(BaseModel):
     title: str = Field(...)
     description: str = Field(...)
     video_url: str = Field(...)
-    training_id: str = Field(...)
+    training_id: str = None
 
 
 class Training(BaseModel):
