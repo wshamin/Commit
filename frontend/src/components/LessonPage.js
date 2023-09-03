@@ -1,40 +1,39 @@
-// frontend/src/app/components/LessonPage.js
-
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function LessonPage() {
-    const { trainingId, lessonId } = useParams();
     const [lesson, setLesson] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const { id: lessonId } = useParams();
 
     useEffect(() => {
-        async function fetchLesson() {
-            try {
-                const headers = {
-                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
-                };
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}trainings/${trainingId}/lessons/${lessonId}`, { headers });
+        axios.get(`${process.env.REACT_APP_API_URL}lessons/${lessonId}/`)
+            .then(response => {
                 setLesson(response.data);
-            } catch (error) {
-                console.error("Ошибка при загрузке урока:", error);
-            }
-        }
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error fetching lesson:", err);
+                setError(err);
+                setLoading(false);
+            });
+    }, [lessonId]);
 
-        fetchLesson();
-    }, [trainingId, lessonId]);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error loading lesson.</p>;
+    if (!lesson) return <p>No lesson found.</p>;
 
     return (
         <div>
-            {lesson ? (
-                <>
-                    <h2>{lesson.title}</h2>
-                    <video width="100%" controls src={lesson.video_url}></video>
-                    <div>{lesson.description}</div>
-                </>
-            ) : (
-                <p>Loading...</p>
-            )}
+            <h2>{lesson.title}</h2>
+            <p>{lesson.description}</p>
+            <video width="320" height="240" controls>
+                <source src={`${process.env.REACT_APP_API_URL}lessons/${lessonId}/video/`} type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
         </div>
     );
 }

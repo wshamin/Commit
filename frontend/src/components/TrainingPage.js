@@ -38,7 +38,7 @@ function TrainingPage() {
 
     // Функция для перехода на страницу урока
     const navigateToLesson = (lessonId) => {
-        navigate(`/trainings/${trainingId}/lessons/${lessonId}`);
+        navigate(`/lessons/${lessonId}`);
     };    
 
     return (

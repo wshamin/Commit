@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from bson import ObjectId
 from bson.errors import InvalidId
 
-from ...db.database import training_collection, lesson_collection
-from ...db.models import Training, User, Lesson
+from ...db.database import training_collection
+from ...db.models import Training, User
 from ...schema.schemas import trainings_to_dict_list, lessons_to_dict_list
 from ...core.security import get_current_user
 

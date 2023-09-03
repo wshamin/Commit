@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';  // Редактор для текстового описания
 import 'react-quill/dist/quill.snow.css'; // стили для ReactQuill
 
-function CreateLessonPage() {
+function CreateLesson() {
     const { id: trainingId } = useParams();
     const [lesson, setLesson] = useState({
         title: '',
@@ -64,4 +64,4 @@ function CreateLessonPage() {
     );
 }
 
-export default CreateLessonPage;
+export default CreateLesson;

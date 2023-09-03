@@ -31,3 +31,17 @@ async def add_lesson(training_id: str, lesson: Lesson):
 async def get_lessons(training_id: str):
     lessons = await lesson_collection.find({'training_id': training_id}).to_list(None)
     return lessons_to_dict_list(lessons)
+
+
+# Получить инфу из урока
+@router.get('/lessons/{lesson_id}/', response_model=Lesson)
+async def get_lesson_by_id(lesson_id: str):
+    try:
+        lesson = await lesson_collection.find_one({'_id': ObjectId(lesson_id)})
+    except InvalidId:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid lesson ID")
+
+    if lesson:
+        return {**lesson, "_id": str(lesson["_id"])}
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Lesson not found")
