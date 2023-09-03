@@ -29,7 +29,8 @@ def lesson_to_dict(lesson) -> dict:
         'id': str(lesson['_id']),
         'title': lesson['title'],
         'description': lesson['description'],
-        'video_url': lesson['video_url']
+        'video_url': lesson['video_url'],
+        'training_id': lesson['training_id']
     }
 
 

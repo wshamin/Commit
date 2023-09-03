@@ -42,9 +42,9 @@ class Lesson(BaseModel):
     title: str = Field(...)
     description: str = Field(...)
     video_url: str = Field(...)
+    training_id: str = Field(...)
 
 
 class Training(BaseModel):
     title: str = Field(...)
     description: str = Field(...)
-    lessons: Optional[List[Lesson]] = []
