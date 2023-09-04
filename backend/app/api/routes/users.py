@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from ...core.config import settings
 from ...core.security import create_access_token, get_password_hash, verify_password
 from ...db.database import user_collection
-from ...db.models import Token, User
+from ...db.models import Token, User, PyObjectId
 from ...schema.schemas import users_to_dict_list
 
 
@@ -31,8 +31,13 @@ async def create_user(user: User):
 @router.post("/token/")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await user_collection.find_one({"email": form_data.username})
+    print(user)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
+
+    # Кастуем _id из ObjectID в PyObjectID (исправить костыль)
+    user_id = PyObjectId(user['_id'])
+    user['_id'] = user_id
 
     user_obj = User(**user)
     password_verified = verify_password(form_data.password, user_obj.password)
@@ -54,7 +59,6 @@ async def update_user(id: str, user: User):
 @router.delete('/users/{id}')
 async def delete_user(id: str):
     user = await user_collection.find_one({"_id": ObjectId(id)})
-    print(user)
     if user:
         await user_collection.delete_one({"_id": ObjectId(id)})
         return {"message": "Пользователь удален"}

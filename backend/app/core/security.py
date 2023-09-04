@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from .config import settings
-from ..db.models import User, TokenData
+from ..db.models import User, PyObjectId, TokenData
 from ..db.database import user_collection
 
 
@@ -47,6 +47,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
 
     user = await user_collection.find_one({"email": token_data.email})
+
+    # Кастуем _id из ObjectID в PyObjectID (исправить костыль)
+    user_id = PyObjectId(user['_id'])
+    user['_id'] = user_id
+
     if user is None:
         raise credentials_exception
 
