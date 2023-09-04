@@ -38,7 +38,7 @@ class User(BaseModel):
     role: str = Field(...)
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
         json_decoders = {ObjectId: PyObjectIdDecoder}
@@ -96,6 +96,7 @@ class Lesson(BaseModel):
 class Training(BaseModel):
     title: str = Field(...)
     description: str = Field(...)
+    owner_id: str = Field(...)
 
 
 class TrainingAccess(BaseModel):

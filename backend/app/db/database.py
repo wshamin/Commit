@@ -11,5 +11,5 @@ db = client['commit']
 
 user_collection = db['users']
 training_collection = db['trainings']
-review_collection = db['reviews']
+training_access_collection = db['training_accesses']
 lesson_collection = db['lessons']

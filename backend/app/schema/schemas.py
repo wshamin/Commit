@@ -16,7 +16,7 @@ def training_to_dict(training) -> dict:
         'id': str(training['_id']),
         'title': training['title'],
         'description': training['description'],
-        'lesson_ids': training['lesson_ids'] if 'lesson_ids' in training else []
+        'owner_id': str(training['owner_id'])
     }
 
 

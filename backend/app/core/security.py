@@ -48,10 +48,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
     user = await user_collection.find_one({"email": token_data.email})
 
-    # # Кастуем _id из ObjectID в PyObjectID (исправить костыль)
-    # user_id = PyObjectId(user['_id'])
-    # user['_id'] = user_id
-
     if user is None:
         raise credentials_exception
 
