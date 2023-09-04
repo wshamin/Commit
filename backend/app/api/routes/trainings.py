@@ -31,7 +31,6 @@ async def create_training(training: Training):
 # Получить список тренингов (для отображения на дашборде пользователя)
 @router.get('/trainings/')
 async def get_trainings(current_user: User = Depends(get_current_user)):
-    print(current_user.id)
     trainings = await training_collection.find().to_list(None)
     return trainings_to_dict_list(trainings)
 

@@ -1,5 +1,5 @@
 from bson import ObjectId
-from pydantic import BaseModel, GetJsonSchemaHandler, Field, EmailStr
+from pydantic import BaseModel, GetJsonSchemaHandler, Field, EmailStr, root_validator
 from pydantic_core import CoreSchema
 from typing import Any, Dict, List, Optional
 
@@ -26,6 +26,10 @@ class PyObjectId(ObjectId):
         }
 
 
+def PyObjectIdDecoder(v) -> PyObjectId:
+    return PyObjectId(v)
+
+
 class User(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str = Field(...)
@@ -37,6 +41,7 @@ class User(BaseModel):
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+        json_decoders = {ObjectId: PyObjectIdDecoder}
         json_schema_extra = {
             "example": {
                 "name": "username",
@@ -45,6 +50,12 @@ class User(BaseModel):
                 "role": "admin",
             }
         }
+
+    @root_validator(pre=True, allow_reuse=True)
+    def convert_objectid_to_pyobjectid(cls, values: dict) -> dict:
+        if '_id' in values and isinstance(values['_id'], ObjectId):
+            values['_id'] = PyObjectId(values['_id'])
+        return values
 
 
 class UpdateUser(BaseModel):

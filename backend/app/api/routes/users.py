@@ -31,13 +31,12 @@ async def create_user(user: User):
 @router.post("/token/")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await user_collection.find_one({"email": form_data.username})
-    print(user)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
 
-    # Кастуем _id из ObjectID в PyObjectID (исправить костыль)
-    user_id = PyObjectId(user['_id'])
-    user['_id'] = user_id
+    # # Кастуем _id из ObjectID в PyObjectID (исправить костыль)
+    # user_id = PyObjectId(user['_id'])
+    # user['_id'] = user_id
 
     user_obj = User(**user)
     password_verified = verify_password(form_data.password, user_obj.password)
