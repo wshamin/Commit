@@ -16,7 +16,7 @@ function LessonPage() {
                 setLoading(false);
             })
             .catch(err => {
-                console.error("Error fetching lesson:", err);
+                console.error("Ошибка при получении уроков:", err);
                 setError(err);
                 setLoading(false);
             });
@@ -32,7 +32,7 @@ function LessonPage() {
             <p>{lesson.description}</p>
             <video width="320" height="240" controls>
                 <source src={`${process.env.REACT_APP_API_URL}lessons/${lessonId}/video/`} type="video/mp4" />
-                Your browser does not support the video tag.
+                Ваш браузер не поддерживает видео тег.
             </video>
         </div>
     );

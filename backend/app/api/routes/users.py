@@ -13,7 +13,7 @@ from ...schema.schemas import users_to_dict_list
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
 @router.get('/users/')
@@ -28,11 +28,11 @@ async def create_user(user: User):
     await user_collection.insert_one(dict(user))
 
 
-@router.post("/token/")
+@router.post('/token/')
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await user_collection.find_one({"email": form_data.username})
+    user = await user_collection.find_one({'email': form_data.username})
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Incorrect username or password')
 
     # # Кастуем _id из ObjectID в PyObjectID (исправить костыль)
     # user_id = PyObjectId(user['_id'])
@@ -41,13 +41,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     user_obj = User(**user)
     password_verified = verify_password(form_data.password, user_obj.password)
     if not password_verified:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Incorrect username or password')
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user_obj.email}, expires_delta=access_token_expires
+        data={'sub': user_obj.email}, expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(access_token=access_token, token_type='bearer')
 
 
 @router.put('/users/{id}')
@@ -57,9 +57,9 @@ async def update_user(id: str, user: User):
 
 @router.delete('/users/{id}')
 async def delete_user(id: str):
-    user = await user_collection.find_one({"_id": ObjectId(id)})
+    user = await user_collection.find_one({'_id': ObjectId(id)})
     if user:
-        await user_collection.delete_one({"_id": ObjectId(id)})
-        return {"message": "Пользователь удален"}
+        await user_collection.delete_one({'_id': ObjectId(id)})
+        return {'message': 'User deleted'}
     else:
-        return {"message": "Пользователь не найден"}
+        return {'message': 'User not found'}

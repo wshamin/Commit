@@ -12,17 +12,16 @@ class PyObjectId(ObjectId):
     @classmethod
     def validate(cls, v):
         if not ObjectId.is_valid(v):
-            raise ValueError("Invalid objectid")
+            raise ValueError('Invalid objectid')
         return ObjectId(v)
 
     @classmethod
     def __get_pydantic_json_schema__(
         cls, core_schema: CoreSchema, handler: GetJsonSchemaHandler
     ) -> Dict[str, Any]:
-        # Поскольку у родительского класса нет этого метода, мы создаем схему "с нуля"
         return {
-            "type": "string",
-            "pattern": "^[0-9a-fA-F]{24}$"  # регулярное выражение для ObjectID
+            'type': 'string',
+            'pattern': '^[0-9a-fA-F]{24}$'  # регулярное выражение для ObjectID
         }
 
 
@@ -31,7 +30,7 @@ def PyObjectIdDecoder(v) -> PyObjectId:
 
 
 class User(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
     name: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
@@ -43,11 +42,11 @@ class User(BaseModel):
         json_encoders = {ObjectId: str}
         json_decoders = {ObjectId: PyObjectIdDecoder}
         json_schema_extra = {
-            "example": {
-                "name": "username",
-                "email": "weshamin@gmail.com",
-                "password": "test1234",
-                "role": "admin",
+            'example': {
+                'name': 'username',
+                'email': 'weshamin@gmail.com',
+                'password': 'test1234',
+                'role': 'admin',
             }
         }
 
@@ -68,11 +67,11 @@ class UpdateUser(BaseModel):
         populate_by_name = True
         json_encoders = {ObjectId: str}
         json_schema_extra = {
-            "example": {
-                "name": "username",
-                "email": "weshamin@gmail.com",
-                "password": "test1234",
-                "role": "admin",
+            'example': {
+                'name': 'username',
+                'email': 'weshamin@gmail.com',
+                'password': 'test1234',
+                'role': 'admin',
             }
         }
 

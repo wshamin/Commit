@@ -22,10 +22,10 @@ function Register() {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}users/`, userData);
       console.log(response.data);
-      alert('User registered!');
+      alert('Пользователь зарегистрирован');
     } catch (error) {
-      console.error('Error registering user:', error);
-      alert('Registration failed.');
+      console.error('Ошибка при регистрации пользователя:', error);
+      alert('Ошибка регистрации');
     }
   };
   

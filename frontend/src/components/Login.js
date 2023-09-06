@@ -35,8 +35,8 @@ function Login({ setIsAuthenticated }) {
             setIsAuthenticated(true);
             navigate("/dashboard");
         } catch (error) {
-            console.error('Error during login:', error);
-            alert('Login failed.');
+            console.error('Ошибка во время входа:', error);
+            alert('Не удалось войти в профиль');
         }
     };
 

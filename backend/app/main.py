@@ -5,22 +5,22 @@ from .api.routes.trainings import router as training_router
 from .api.routes.uploads import router as uploads_router
 from .api.routes.lessons import router as lessons_router
 
-app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
+app = FastAPI(docs_url='/api/docs', openapi_url='/api/openapi.json')
 
 origins = [
-    "http://127.0.0.1:3000"
+    'http://127.0.0.1:3000'
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["Content-Range", "Date", "Server", "Transfer-Encoding"]
+    allow_methods=['*'],
+    allow_headers=['*'],
+    expose_headers=['Content-Range', 'Date', 'Server', 'Transfer-Encoding']
 )
 
-app.include_router(user_router, prefix="/api", tags=["users"])
-app.include_router(training_router, prefix="/api", tags=["trainings"])
-app.include_router(uploads_router, prefix="/api", tags=["uploads"])
-app.include_router(lessons_router, prefix="/api", tags=["lessons"])
+app.include_router(user_router, prefix='/api', tags=['users'])
+app.include_router(training_router, prefix='/api', tags=['trainings'])
+app.include_router(uploads_router, prefix='/api', tags=['uploads'])
+app.include_router(lessons_router, prefix='/api', tags=['lessons'])

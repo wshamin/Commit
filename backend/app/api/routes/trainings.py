@@ -39,8 +39,8 @@ async def get_trainings(current_user: User = Depends(get_current_user)):
     # Включить тренинги, которые принадлежат пользователю
     owned_trainings = await training_collection.find({'owner_id': current_user.id}).to_list(None)
     for training in owned_trainings:
-        if str(training["_id"]) not in accessible_training_ids:
-            accessible_training_ids.append(str(training["_id"]))
+        if str(training['_id']) not in accessible_training_ids:
+            accessible_training_ids.append(str(training['_id']))
 
     trainings = await training_collection.find({'_id': {'$in': [ObjectId(id) for id in accessible_training_ids]}}).to_list(None)
     return trainings_to_dict_list(trainings)
@@ -52,9 +52,9 @@ async def get_training_by_id(training_id: str):
     try:
         training = await training_collection.find_one({'_id': ObjectId(training_id)})
     except InvalidId:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid training ID")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid training ID')
 
     if training:
-        return {**training, "_id": str(training["_id"])} 
+        return {**training, '_id': str(training['_id'])} 
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Training not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Training not found')
