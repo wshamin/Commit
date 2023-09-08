@@ -3,7 +3,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 
 from ...db.database import training_collection, training_access_collection, user_collection
-from ...db.models import Training, User
+from ...db.models import Training, TrainingResponse, User
 from ...schema.schemas import trainings_to_dict_list, lessons_to_dict_list, user_to_dict
 from ...core.security import get_current_user
 
@@ -14,12 +14,12 @@ router = APIRouter()
 #CRUD
 
 # Создать тренинг
-@router.post('/trainings/')
+@router.post('/trainings/', response_model=TrainingResponse)
 async def create_training(training: Training, current_user: User = Depends(get_current_user)):
-    training.owner_id = current_user.id
-    training_dict = dict(training)
+    training_to_insert = training.dict()
+    training_to_insert["owner_id"] = current_user.id
 
-    result = await training_collection.insert_one(training_dict)
+    result = await training_collection.insert_one(training_to_insert)
     if result:
         return {'id': str(result.inserted_id)}
     else:

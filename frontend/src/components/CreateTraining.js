@@ -21,17 +21,28 @@ function CreateTraining() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const token = localStorage.getItem('accessToken'); // Используйте тот ключ, под которым вы сохраняете токен в localStorage
+
             const dataToSend = {
                 title: trainingData.title,
                 description: trainingData.description
             };
-
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/`, dataToSend);
-
+    
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}trainings/`, 
+                dataToSend,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+    
             if (response.status === 200) {
                 alert('Тренинг успешно создан!');
                 navigate(`/trainings/${response.data.id}`);
             } else {
+                console.error('Server responded with status:', response.status);
                 alert('Произошла ошибка при создании тренинга.');
             }
         } catch (error) {
@@ -39,6 +50,7 @@ function CreateTraining() {
             alert('Ошибка при создании тренинга.');
         }
     };
+    
 
     return (
         <div>

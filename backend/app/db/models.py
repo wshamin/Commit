@@ -95,7 +95,10 @@ class Lesson(BaseModel):
 class Training(BaseModel):
     title: str = Field(...)
     description: str = Field(...)
-    owner_id: str = Field(...)
+
+
+class TrainingResponse(BaseModel):
+    id: str
 
 
 class TrainingAccess(BaseModel):
