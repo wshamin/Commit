@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from .config import settings
-from ..db.models import User, PyObjectId, TokenData
+from ..db.models import User, TokenData, PyObjectId
 from ..db.database import user_collection
 
 
