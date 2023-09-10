@@ -19,7 +19,7 @@ async def create_training(training: Training = Body(...), current_user: User = D
     training = jsonable_encoder(training)
     training['owner_id'] = str(current_user.id)
     new_training = await training_collection.insert_one(training)
-    created_training = await training_collection.find_one({'id': new_training.inserted_id})
+    created_training = await training_collection.find_one({'_id': new_training.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_training)
 
 

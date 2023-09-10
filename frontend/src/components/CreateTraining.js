@@ -38,9 +38,10 @@ function CreateTraining() {
                 }
             );
     
-            if (response.status === 200) {
+            if (response.status === 201) {
                 alert('Тренинг успешно создан!');
-                navigate(`/trainings/${response.data.id}`);
+                console.log(response);
+                navigate(`/trainings/${response.data._id}`);
             } else {
                 console.error('Server responded with status:', response.status);
                 alert('Произошла ошибка при создании тренинга.');
