@@ -86,13 +86,19 @@ class Training(BaseModel):
         }
 
 
-class TrainingResponse(BaseModel):
-    id: str
-
-
 class TrainingAccess(BaseModel):
-    user_id: str = Field(...)
-    training_id: str = Field(...)
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    user_id: Optional[PyObjectId] = Field(...)
+    training_id: Optional[PyObjectId] = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+
+
+class GrantAccessRequest(BaseModel):
+    user_email: EmailStr
 
 
 class Lesson(BaseModel):

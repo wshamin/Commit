@@ -41,6 +41,11 @@ function TrainingPage() {
         navigate(`/lessons/${lessonId}`);
     };    
 
+    // Функция для перехода на страницу выдачи доступа
+    const goToGrantAccessPage = () => {
+        navigate(`/trainings/${trainingId}/grant-access/`);
+    };    
+
     return (
         <div>
             {training ? (
@@ -48,6 +53,7 @@ function TrainingPage() {
                     <h2>{training.title}</h2>
                     <p>{training.description}</p>
                     <button onClick={goToCreateLessonPage}>Создать урок</button>
+                    <button onClick={goToGrantAccessPage}>Выдать доступ</button>
                     {lessons.map(lesson => (
                         <div key={lesson.id} className={styles.lessonBlock} onClick={() => navigateToLesson(lesson.id)}>
                             <h3>{lesson.title}</h3>

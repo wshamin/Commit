@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Body, HTTPException, Depends, status
 from bson import ObjectId
-from bson.errors import InvalidId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from ...db.database import training_collection, training_access_collection, user_collection
-from ...db.models import Training, TrainingResponse, User
-from ...schema.schemas import trainings_to_dict_list, lessons_to_dict_list, user_to_dict
+from ...db.models import Training, TrainingAccess, User, PyObjectId, GrantAccessRequest
+from ...schema.schemas import trainings_to_dict_list
 from ...core.security import get_current_user
+from ..deps import is_training_owner
 
 
 router = APIRouter()
@@ -53,3 +53,38 @@ async def get_training_by_id(training_id: str):
         return training
     
     raise HTTPException(status_code=404, detail=f'Training {id} not found')
+
+
+# Выдать доступ к тренингу другому пользователю
+@router.post('/trainings/{training_id}/access/')
+async def grant_access_to_training(
+    training_id: str,
+    request: GrantAccessRequest,
+    current_user: User = Depends(get_current_user)
+):
+    # Проверяем, что пользователь является владельцем тренинга
+    training = await training_collection.find_one({'_id': training_id})
+    if not training:
+        raise HTTPException(status_code=404, detail='Training not found')
+    if training['owner_id'] != str(current_user.id):
+        raise HTTPException(status_code=403, detail='Not authorized to grant access')
+
+    # Ищем целевого пользователя по email
+    user_email = request.user_email
+    user = await user_collection.find_one({'email': user_email})
+    if not user:
+        raise HTTPException(status_code=404, detail='User not found')
+
+    # Проверяем, был ли уже предоставлен доступ целевому пользователю
+    existing_access = await training_access_collection.find_one({
+        'user_id': user['_id'],
+        'training_id': training_id
+    })
+    if existing_access:
+        raise HTTPException(status_code=400, detail='Access already granted')
+
+    # Выдаем доступ
+    access_record = {'training_id': training_id, 'user_id': user['_id']}
+    await training_access_collection.insert_one(access_record)
+
+    return {'status': 'success', 'message': f'Access granted to {user_email}'}

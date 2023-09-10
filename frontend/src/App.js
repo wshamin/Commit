@@ -9,6 +9,7 @@ import TrainingPage from './components/TrainingPage';
 import Dashboard from './components/Dashboard';
 import CreateLesson from './components/CreateLesson';
 import LessonPage from './components/LessonPage';
+import GrantAccessPage from './components/GrantAccessPage';
 
 function Navigation({ isAuthenticated, handleLogout }) {
   return (
@@ -57,6 +58,7 @@ function App() {
                     <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
                     <Route path="/create-training" element={<CreateTraining />} />
                     <Route path="/trainings/:id" element={<TrainingPage />} />
+                    <Route path="/trainings/:trainingId/grant-access/" element={<GrantAccessPage />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/trainings/:id/create-lesson" element={<CreateLesson />} />
                     <Route path="/lessons/:id" element={<LessonPage />} />

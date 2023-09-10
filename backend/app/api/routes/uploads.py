@@ -31,12 +31,12 @@ async def upload_video(file: UploadFile = File(...)):
 # Получить видео
 @router.get('/lessons/{lesson_id}/video/')
 async def get_video(lesson_id: str):
-    lesson = await lesson_collection.find_one({'_id': ObjectId(lesson_id)})
+    lesson = await lesson_collection.find_one({'_id': lesson_id})
     if not lesson:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Lesson not found')
+        raise HTTPException(status_code=404, detail=f'Lesson {id} not found')
 
     video_path = os.path.join(VIDEOS_DIR, lesson['video_url'])
     if not os.path.exists(video_path):
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Video not found')
+        raise HTTPException(status_code=404, detail='Video not found')
 
     return FileResponse(video_path)
