@@ -44,9 +44,14 @@ function Dashboard() {
             </Link>
 
             {currentUser && currentUser.role === 'admin' && (
+                <>
                 <Link to="/users">
-                <button>Пользователи</button>
+                    <button>Пользователи</button>
                 </Link>
+                <Link to="/trainings">
+                    <button>Тренинги</button>
+                </Link>
+                </>
             )}
 
             <div>

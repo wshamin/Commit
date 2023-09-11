@@ -11,6 +11,7 @@ import CreateLesson from './components/CreateLesson';
 import LessonPage from './components/LessonPage';
 import GrantAccessPage from './components/GrantAccessPage';
 import UsersPage from './components/UserPage';
+import TrainingList from './components/TrainingList';
 
 function Navigation({ isAuthenticated, handleLogout }) {
   return (
@@ -64,6 +65,7 @@ function App() {
                     <Route path="/trainings/:trainingId/grant-access/" element={<GrantAccessPage />} />
                     <Route path="/trainings/:id/create-lesson" element={<CreateLesson />} />
                     <Route path="/lessons/:id" element={<LessonPage />} />
+                    <Route path="/trainings" element={<TrainingList />} />
                 </Routes>
             </div>
         </Router>
