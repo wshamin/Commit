@@ -71,7 +71,11 @@ function UsersPage() {
                 <br /><input name="name" placeholder="Имя" onChange={handleChange} /><br />
                 <input name="email" placeholder="Почта" onChange={handleChange} /><br />
                 <input name="password" placeholder="Пароль" onChange={handleChange} /><br />
-                <input name="role" placeholder="Роль" onChange={handleChange} /><br />
+                <select name="role" onChange={handleChange}>
+                  <option value="">Выберите роль</option>
+                  <option value="user">user</option>
+                  <option value="admin">admin</option>
+                </select><br />
                 <button onClick={() => updateUser(user._id)}>Сохранить</button>
               </>
             ) : (

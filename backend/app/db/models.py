@@ -44,7 +44,7 @@ class UpdateUser(BaseModel):
     name: Optional[str]
     email: Optional[EmailStr]
     password: Optional[str]
-    role: Optional[str]
+    role: Optional[UserRole]
 
     class Config:
         arbitrary_types_allowed = True
