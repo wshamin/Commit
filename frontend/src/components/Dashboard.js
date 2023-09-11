@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Dashboard() {
     const [trainings, setTrainings] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         async function fetchTrainings() {
@@ -18,15 +19,35 @@ function Dashboard() {
             }
         }
 
+        async function fetchCurrentUser() {
+            try {
+              const headers = {
+                'Authorization': `Bearer ${localStorage.getItem("accessToken")}`
+              };
+              const response = await axios.get(`${process.env.REACT_APP_API_URL}users/current_user/`, { headers });
+              setCurrentUser(response.data);
+            } catch (error) {
+              console.error("Ошибка при получении текущего пользователя:", error);
+            }
+          }          
+
         fetchTrainings();
+        fetchCurrentUser();
     }, []);
 
     return (
         <div>
-            <h2>Личный кабинет кикет</h2>
+            <h2>Личный кабинет</h2>
+
             <Link to="/create-training">
                 <button>Создать тренинг</button>
             </Link>
+
+            {currentUser && currentUser.role === 'admin' && (
+                <Link to="/users">
+                <button>Пользователи</button>
+                </Link>
+            )}
 
             <div>
                 {trainings.map(training => (

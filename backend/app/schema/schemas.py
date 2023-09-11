@@ -1,6 +1,6 @@
 def user_to_dict(user) -> dict:
     return {
-        'id': str(user['_id']),
+        'id': user['_id'],
         'name': user['name'],
         'email': user['email'],
         'password': user['password'],
@@ -14,10 +14,10 @@ def users_to_dict_list(users) -> list:
 
 def training_to_dict(training) -> dict:
     return {
-        'id': str(training['_id']),
+        'id': training['_id'],
         'title': training['title'],
         'description': training['description'],
-        'owner_id': str(training['owner_id'])
+        'owner_id': training['owner_id']
     }
 
 
@@ -27,7 +27,7 @@ def trainings_to_dict_list(trainings) -> list:
 
 def lesson_to_dict(lesson) -> dict:
     return {
-        'id': str(lesson['_id']),
+        'id': lesson['_id'],
         'title': lesson['title'],
         'description': lesson['description'],
         'video_url': lesson['video_url'],

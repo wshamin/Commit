@@ -1,6 +1,7 @@
 from bson import ObjectId
 from pydantic import BaseModel, Field, EmailStr
 from typing import Any, Dict, List, Optional
+from ..core.roles import UserRole
 
 
 class PyObjectId(ObjectId):
@@ -24,7 +25,7 @@ class User(BaseModel):
     name: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
-    role: str = Field(...)
+    role: Optional[UserRole] = UserRole.USER.value
 
     class Config:
         allow_population_by_field_name = True
@@ -35,7 +36,6 @@ class User(BaseModel):
                 "name": "string",
                 "email": "user@example.com",
                 "password": "string",
-                "role": "admin",
             }
         }
 

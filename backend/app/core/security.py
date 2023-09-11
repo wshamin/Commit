@@ -6,6 +6,7 @@ from jose import JWTError, jwt
 from .config import settings
 from ..db.models import User, TokenData, PyObjectId
 from ..db.database import user_collection
+from ..core.roles import UserRole, UserPermission
 
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -31,6 +32,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
+
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -52,3 +54,17 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
 
     return User(**user)
+
+
+def require_permission(permission: UserPermission):
+    def decorator(current_user: User = Depends(get_current_user)):
+        if permission not in ROLE_PERMISSIONS[current_user.role]:
+            raise HTTPException(status_code=403, detail="Not enough permissions")
+        return current_user
+    return decorator
+
+
+def require_admin_role(current_user: User = Depends(get_current_user)):
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+    return current_user
