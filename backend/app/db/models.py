@@ -80,6 +80,25 @@ class Training(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
+                "owner_id": "64fdbdf67849e5a51f37fa39",
+                "title": "Training Example",
+                "description": "Description for training example",
+            }
+        }
+
+
+class TrainingUpdate(BaseModel):
+    owner_id: Optional[PyObjectId]
+    owner_email: Optional[str]
+    title: Optional[str]
+    description: Optional[str]
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "owner_id": "64fdbdf67849e5a51f37fa39",
                 "title": "Training Example",
                 "description": "Description for training example",
             }
