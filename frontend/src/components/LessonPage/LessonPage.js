@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import './styles.css';
+
+const isVideoValid = true;
 
 function LessonPage() {
-    const [lesson, setLesson] = useState(null);
+    const [lesson, setLesson] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -27,13 +30,18 @@ function LessonPage() {
     if (!lesson) return <p>No lesson found.</p>;
 
     return (
-        <div>
+        <div className="mainDiv">
             <h2>{lesson.title}</h2>
-            <p>{lesson.description}</p>
+            <div
+            className="formatted-text"
+            dangerouslySetInnerHTML={{ __html: lesson.description }}
+            />
+            <div className="video">
             <video width="320" height="240" controls>
                 <source src={`${process.env.REACT_APP_API_URL}lessons/${lessonId}/video/`} type="video/mp4" />
                 Ваш браузер не поддерживает видео тег.
             </video>
+            </div>
         </div>
     );
 }

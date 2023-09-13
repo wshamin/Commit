@@ -24,7 +24,6 @@ export default function SignIn({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(isAuthenticated);
     if (isAuthenticated) navigate("/dashboard");
   }, [isAuthenticated, navigate]);
 

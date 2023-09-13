@@ -54,7 +54,7 @@ function Dashboard() {
     }, []);
 
     return (
-        <div>
+            <div>
             <h2 className="h2-header">Личный кабинет</h2>
 
             <Button variant="contained" onClick={handleCreateTrainingClick} sx={{ marginLeft: '30px' }}>Создать тренинг</Button>

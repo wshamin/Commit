@@ -143,7 +143,7 @@ class Lesson(BaseModel):
     training_id: Optional[PyObjectId] = None
     title: str = Field(...)
     description: str = Field(...)
-    video_url: str = Field(...)
+    video_url: Optional[str]
 
     class Config:
         allow_population_by_field_name = True

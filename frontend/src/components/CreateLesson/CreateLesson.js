@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
 import ReactQuill from 'react-quill';  // Редактор для текстового описания
 import 'react-quill/dist/quill.snow.css'; // стили для ReactQuill
+import './styles.css';
 
 function CreateLesson() {
     const { id: trainingId } = useParams();
@@ -11,6 +13,8 @@ function CreateLesson() {
         video: null,
         description: ''
     });
+
+    const navigate = useNavigate();
 
     const handleVideoUpload = async (event) => {
         const formData = new FormData();
@@ -30,36 +34,39 @@ function CreateLesson() {
 
     const handleCreateLesson = async () => {
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}trainings/${trainingId}/lessons/`, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}trainings/${trainingId}/lessons/`, {
                 title: lesson.title,
                 video_url: lesson.video,
                 description: lesson.description
             });
-            alert("Урок успешно создан!");
+            console.log("Урок успешно создан!");
+            navigate(`/lessons/${response.data._id}`);
         } catch (error) {
             console.error("Ошибка при создании урока:", error);
         }
     };
 
     return (
-        <div>
+        <div className="mainDiv">
             <h2>Создать урок</h2>
-            <div>
+            <div className="labelDiv">
                 <label>Название урока:</label>
                 <input type="text" value={lesson.title} onChange={e => setLesson(prevState => ({ ...prevState, title: e.target.value }))} />
             </div>
-            <div>
-                <label>Видео-материалы к уроку:</label>
+            <div className="labelDiv">
+                <label>Видео-материалы:</label>
                 <input type="file" onChange={handleVideoUpload} />
             </div>
-            <div>
+            <div className="labelDiv">
                 <label>Текстовое описание урока:</label>
-                <ReactQuill 
-                    value={lesson.description} 
-                    onChange={value => setLesson(prevState => ({ ...prevState, description: value }))} 
-                />
+                <div className="react-quill-container">
+                    <ReactQuill 
+                        value={lesson.description} 
+                        onChange={value => setLesson(prevState => ({ ...prevState, description: value }))} 
+                    />
+                </div>
             </div>
-            <button onClick={handleCreateLesson}>Создать урок</button>
+            <Button variant="contained" onClick={handleCreateLesson}>Создать урок</Button>
         </div>
     );
 }

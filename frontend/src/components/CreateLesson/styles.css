@@ -1,0 +1,16 @@
+.mainDiv {
+    margin-left: 30px;
+}
+
+.labelDiv {
+    margin-bottom: 15px;
+}
+
+.react-quill-container {
+    max-width: 462px;
+    margin-top: 15px;
+}
+
+.react-quill-container .ql-editor {
+    min-height: 100px;
+}

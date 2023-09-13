@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-// Компоненты
-import CreateTraining from './components/CreateTraining';
+import CreateTraining from './components/CreateTraining/CreateTraining';
 import TrainingPage from './components/TrainingPage/TrainingPage';
 import Dashboard from './components/Dashboard/Dashboard';
-import CreateLesson from './components/CreateLesson';
-import LessonPage from './components/LessonPage';
+import CreateLesson from './components/CreateLesson/CreateLesson';
+import LessonPage from './components/LessonPage/LessonPage';
 import GrantAccessPage from './components/GrantAccessPage';
 import UsersPage from './components/UserPage';
 import TrainingList from './components/TrainingList';
@@ -37,9 +36,9 @@ function App() {
                     <Route path="/trainings/:id/create-lesson" element={<CreateLesson />} />
                     <Route path="/lessons/:id" element={<LessonPage />} />
                     <Route path="/trainings" element={<TrainingList />} />
-                    <Route path="*" element={<Navigate to="/login" />} />
+                    <Route path="*" element={<Navigate to="/login" />} /> 
                 </Routes>
-            </div>
+                </div>
         </Router>
     );
 }

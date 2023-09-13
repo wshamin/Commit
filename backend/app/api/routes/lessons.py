@@ -24,7 +24,7 @@ async def create_lesson(training_id: str, lesson: Lesson = Body(...)):
     lesson = jsonable_encoder(lesson)
     lesson['training_id'] = training_id
     new_lesson = await lesson_collection.insert_one(lesson)
-    created_lesson = await lesson_collection.find_one({'id': new_lesson.inserted_id})
+    created_lesson = await lesson_collection.find_one({'_id': new_lesson.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_lesson)
 
 
