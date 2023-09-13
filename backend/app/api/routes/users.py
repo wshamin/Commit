@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from ...core.config import settings
 from ...core.security import create_access_token, get_password_hash, verify_password, require_admin_role, get_current_user
 from ...db.database import user_collection
-from ...db.models import Token, User, UpdateUser
+from ...db.models import Token, User, UserCreate, UserUpdate
 from ...schema.schemas import users_to_dict_list
 from ...core.roles import UserRole
 
@@ -23,14 +23,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 @router.get('/users/', response_description='List all users', response_model=List[User])
 async def list_users(current_user: User = Depends(require_admin_role)):
     users = await user_collection.find().to_list(None)
-    return users_to_dict_list(users)
+    return users
 
 
 @router.post('/users/', response_description='Create new user', response_model=User)
-async def create_user(user: User = Body(...)):
+async def create_user(user: UserCreate = Body(...)):
     try:
         user = jsonable_encoder(user)
         user['password'] = get_password_hash(user['password'])
+        user['role'] = UserRole.USER.value
         new_user = await user_collection.insert_one(user)
         created_user = await user_collection.find_one({'_id': new_user.inserted_id})
         return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_user)
@@ -49,7 +50,7 @@ async def show_user(id: str):
 
 # Обновить все данные о пользователе (включая роль, для администраторов)
 @router.put('/users/{id}', response_description='Update a user', response_model=User)
-async def update_user(id: str, user: UpdateUser = Body(...), current_user: User = Depends(require_admin_role)):
+async def update_user(id: str, user: UserUpdate = Body(...), current_user: User = Depends(require_admin_role)):
     user = {k: v for k, v in dict(user).items() if v is not None}
 
     if 'password' in user:
@@ -91,6 +92,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Incorrect username or password')
 
+    print(user)
     user_obj = User(**user)
     password_verified = verify_password(form_data.password, user_obj.password)
     if not password_verified:

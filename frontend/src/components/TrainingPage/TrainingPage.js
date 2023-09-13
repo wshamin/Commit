@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import styles from './TrainingPage.module.css';
+import Button from '@mui/material/Button';
+import LessonCard from './components/LessonCard';
+import './styles.css';
 
 function TrainingPage() {
     const [training, setTraining] = useState(null);
@@ -50,15 +52,16 @@ function TrainingPage() {
         <div>
             {training ? (
                 <>
-                    <h2>{training.title}</h2>
-                    <p>{training.description}</p>
-                    <button onClick={goToCreateLessonPage}>Создать урок</button>
-                    <button onClick={goToGrantAccessPage}>Выдать доступ</button>
-                    {lessons.map(lesson => (
-                        <div key={lesson.id} className={styles.lessonBlock} onClick={() => navigateToLesson(lesson.id)}>
-                            <h3>{lesson.title}</h3>
-                        </div>
-                    ))}
+                    <h2 className="h2-header">{training.title}</h2>
+                    <p className="p-text">{training.description}</p>
+                    <Button variant="contained" onClick={goToCreateLessonPage} sx={{ marginLeft: '30px' }}>Создать урок</Button>
+                    <Button variant="contained" onClick={goToGrantAccessPage} sx={{ marginLeft: '20px' }}>Выдать доступ</Button>
+                    <div>
+                        {lessons.map(card => 
+                            <LessonCard title={card.title} cardId={card.id} />
+                        )
+                        }
+                    </div>
                 </>
             ) : (
                 <p>Loading...</p>

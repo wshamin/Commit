@@ -22,10 +22,10 @@ class PyObjectId(ObjectId):
 
 class User(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    name: str = Field(...)
+    login: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
-    role: Optional[UserRole] = UserRole.USER.value
+    role: Optional[UserRole] = Field(default=UserRole.USER.value)
 
     class Config:
         allow_population_by_field_name = True
@@ -40,11 +40,29 @@ class User(BaseModel):
         }
 
 
-class UpdateUser(BaseModel):
+class UserCreate(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    login: str = Field(...)
+    email: EmailStr = Field(...)
+    password: str = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "string",
+                "email": "user@example.com",
+                "password": "string",
+            }
+        }
+
+
+class UserUpdate(BaseModel):
     name: Optional[str]
     email: Optional[EmailStr]
     password: Optional[str]
-    role: Optional[UserRole]
 
     class Config:
         arbitrary_types_allowed = True

@@ -1,10 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import TrainingCard from './components/TrainingCard';
+import './styles.css';
 
 function Dashboard() {
     const [trainings, setTrainings] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
+
+    const navigate = useNavigate();
+
+    const handleCreateTrainingClick = () => {
+        navigate("/create-training");
+      };
+
+    const handleUsersButtonClick = () => {
+    navigate("/users");
+    };
+
+    const handleTrainingsButtonClick = () => {
+        navigate("/trainings");
+      };
 
     useEffect(() => {
         async function fetchTrainings() {
@@ -37,38 +55,22 @@ function Dashboard() {
 
     return (
         <div>
-            <h2>Личный кабинет</h2>
+            <h2 className="h2-header">Личный кабинет</h2>
 
-            <Link to="/create-training">
-                <button>Создать тренинг</button>
-            </Link>
+            <Button variant="contained" onClick={handleCreateTrainingClick} sx={{ marginLeft: '30px' }}>Создать тренинг</Button>
 
             {currentUser && currentUser.role === 'admin' && (
                 <>
-                <Link to="/users">
-                    <button>Пользователи</button>
-                </Link>
-                <Link to="/trainings">
-                    <button>Тренинги</button>
-                </Link>
+                    <Button variant="outlined" onClick={handleUsersButtonClick} sx={{ marginLeft: '20px' }}>Пользователи</Button>
+                    <Button variant="outlined" onClick={handleTrainingsButtonClick} sx={{ marginLeft: '20px' }}>Тренинги</Button>
                 </>
             )}
-
+            
             <div>
-                {trainings.map(training => (
-                    <Link to={`/trainings/${training.id}`} style={{
-                        display: 'block',
-                        width: '30%',
-                        height: '150px',
-                        border: '2px solid black',
-                        marginBottom: '10px',
-                        marginLeft: '30px',
-                        padding: '10px'
-                    }} key={training.id}>
-                        <h3>{training.title}</h3>
-                        <p>{training.description}</p>
-                    </Link>
-                ))}
+                {trainings.map(card => 
+                    <TrainingCard title={card.title} description={card.description} cardId={card.id} />
+                )
+            }
             </div>
         </div>
     );
