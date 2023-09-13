@@ -107,7 +107,7 @@ function CreateTraining() {
                     onChange={handleChange}
                     required
                 />
-                <Button variant="contained" type="submit">Создать урок</Button>
+                <Button variant="contained" type="submit">Создать тренинг</Button>
             </Box>
         </div>
     );
