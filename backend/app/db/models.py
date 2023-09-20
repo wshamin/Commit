@@ -20,12 +20,12 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 
-class User(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    login: str = Field(...)
-    email: EmailStr = Field(...)
-    password: str = Field(...)
-    role: Optional[UserRole] = Field(default=UserRole.USER.value)
+class UserDB(BaseModel):
+    id: PyObjectId = Field(alias="_id")
+    login: str 
+    email: EmailStr 
+    password: str
+    role: UserRole
 
     class Config:
         allow_population_by_field_name = True
@@ -33,9 +33,11 @@ class User(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "name": "string",
+                "id": "string",
+                "login": "user",
                 "email": "user@example.com",
                 "password": "string",
+                "role": "user"
             }
         }
 
@@ -52,9 +54,29 @@ class UserCreate(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "name": "string",
+                "login": "string",
                 "email": "user@example.com",
-                "password": "string",
+                "password": "string"
+            }
+        }
+
+
+class UserRead(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    login: str
+    email: EmailStr
+    role: Optional[UserRole]
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "id": "string",
+                "login": "string",
+                "email": "user@example.com",
+                "role": "user"
             }
         }
 

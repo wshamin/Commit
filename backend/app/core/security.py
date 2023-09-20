@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from .config import settings
-from ..db.models import User, TokenData, PyObjectId
+from ..db.models import UserDB, TokenData, PyObjectId, UserRead
 from ..db.database import user_collection
 from ..core.roles import UserRole, UserPermission
 
@@ -53,18 +53,18 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
 
-    return User(**user)
+    return UserDB(**user)
 
 
-def require_permission(permission: UserPermission):
-    def decorator(current_user: User = Depends(get_current_user)):
-        if permission not in ROLE_PERMISSIONS[current_user.role]:
-            raise HTTPException(status_code=403, detail="Not enough permissions")
-        return current_user
-    return decorator
+# def require_permission(permission: UserPermission):
+#     def decorator(current_user: User = Depends(get_current_user)):
+#         if permission not in ROLE_PERMISSIONS[current_user.role]:
+#             raise HTTPException(status_code=403, detail="Not enough permissions")
+#         return current_user
+#     return decorator
 
 
-def require_admin_role(current_user: User = Depends(get_current_user)):
+def require_admin_role(current_user: UserRead = Depends(get_current_user)):
     if current_user.role != UserRole.ADMIN:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     return current_user
