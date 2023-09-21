@@ -1,7 +1,6 @@
 from bson import ObjectId
 from pydantic import BaseModel, Field, EmailStr
-from typing import Any, Dict, List, Optional
-from ..core.roles import UserRole
+from typing import Optional
 
 
 class PyObjectId(ObjectId):
@@ -12,7 +11,7 @@ class PyObjectId(ObjectId):
     @classmethod
     def validate(cls, v):
         if not ObjectId.is_valid(v):
-            raise ValueError("Invalid objectid")
+            raise ValueError("Invalid ObjectID")
         return ObjectId(v)
 
     @classmethod
@@ -20,83 +19,11 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 
-class UserDB(BaseModel):
-    id: PyObjectId = Field(alias="_id")
-    login: str 
-    email: EmailStr 
-    password: str
-    role: UserRole
-
+class CustomBaseModel(BaseModel):
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
-        schema_extra = {
-            "example": {
-                "id": "string",
-                "login": "user",
-                "email": "user@example.com",
-                "password": "string",
-                "role": "user"
-            }
-        }
-
-
-class UserCreate(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    login: str = Field(...)
-    email: EmailStr = Field(...)
-    password: str = Field(...)
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-        schema_extra = {
-            "example": {
-                "login": "string",
-                "email": "user@example.com",
-                "password": "string"
-            }
-        }
-
-
-class UserRead(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    login: str
-    email: EmailStr
-    role: Optional[UserRole]
-
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-        schema_extra = {
-            "example": {
-                "id": "string",
-                "login": "string",
-                "email": "user@example.com",
-                "role": "user"
-            }
-        }
-
-
-class UserUpdate(BaseModel):
-    name: Optional[str]
-    email: Optional[EmailStr]
-    password: Optional[str]
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
-        schema_extra = {
-            "example": {
-                "name": "string",
-                "email": "user@example.com",
-                "password": "string",
-                "role": "admin",
-            }
-        }
 
 
 class Token(BaseModel):
@@ -105,7 +32,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    email: Optional[str] = None
+    user_id: Optional[str] = None
 
 
 class Training(BaseModel):

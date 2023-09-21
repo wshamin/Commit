@@ -1,7 +1,6 @@
-from bson import ObjectId
 from fastapi import HTTPException, status
 
-from ..db.models import UserDB
+from app.db.models.core import UserDB
 from ..db.database import training_collection, training_access_collection
 
 

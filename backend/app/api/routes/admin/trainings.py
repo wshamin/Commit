@@ -1,11 +1,4 @@
-from typing import List
-from fastapi import APIRouter, Body, Depends
-
-from ....core.security import require_admin_role
-from ....db.database import training_collection, user_collection
-from ....db.models import Training, TrainingUpdate, UserDB
-from ....schema.schemas import trainings_to_dict_list
-
+from fastapi import APIRouter
 
 router = APIRouter()
 

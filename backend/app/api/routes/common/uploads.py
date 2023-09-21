@@ -4,7 +4,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import FileResponse
 from bson import ObjectId
 
-from ...db.database import lesson_collection
+from ....db.database import lesson_collection
 
 router = APIRouter()
 

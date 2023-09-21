@@ -3,10 +3,14 @@ from datetime import datetime, timedelta
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from bson import ObjectId
+
+from app.db.models.users import UserID
+
 from .config import settings
-from ..db.models import UserDB, TokenData, PyObjectId, UserRead
+from app.db.models.core import TokenData
 from ..db.database import user_collection
-from ..core.roles import UserRole, UserPermission
+from ..core.roles import UserRole
 
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -41,19 +45,19 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.ALGORITHM)
-        email: str = payload.get('sub')
-        if email is None:
+        user_id: str = payload.get('sub')
+        if user_id is None:
             raise credentials_exception
-        token_data = TokenData(email=email)
+        token_data = TokenData(user_id=user_id)
     except JWTError:
         raise credentials_exception
 
-    user = await user_collection.find_one({'email': token_data.email})
+    user = await user_collection.find_one({'_id': ObjectId(token_data.user_id)})
 
     if user is None:
         raise credentials_exception
 
-    return UserDB(**user)
+    return UserID(**user)
 
 
 # def require_permission(permission: UserPermission):
@@ -64,7 +68,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 #     return decorator
 
 
-def require_admin_role(current_user: UserRead = Depends(get_current_user)):
+def require_admin_role(current_user: UserID = Depends(get_current_user)):
     if current_user.role != UserRole.ADMIN:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     return current_user

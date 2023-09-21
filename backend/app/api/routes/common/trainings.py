@@ -3,11 +3,11 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from ...db.database import training_collection, training_access_collection, user_collection
-from ...db.models import Training, TrainingAccess, UserDB, PyObjectId, GrantAccessRequest
-from ...schema.schemas import trainings_to_dict_list
-from ...core.security import get_current_user
-from ..deps import is_training_owner
+# from ....db.database import training_collection, training_access_collection, user_collection
+# from ....db.models import Training, TrainingAccess, UserDB, PyObjectId, GrantAccessRequest
+# from ....schema.schemas import trainings_to_dict_list
+# from ....core.security import get_current_user
+# from ...deps import is_training_owner
 
 
 router = APIRouter()

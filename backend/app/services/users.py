@@ -1,33 +1,58 @@
-from datetime import timedelta
 from typing import List
 
 from bson import ObjectId
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse, Response
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from ..core.config import settings
-from ..core.security import create_access_token, get_password_hash, verify_password, require_admin_role, get_current_user
-from ..db.database import user_collection
-from ..db.models import Token, UserDB, UserCreate, UserRead
-from ..core.roles import UserRole
+from app.core.roles import UserRole
+from app.core.security import get_password_hash
+from app.db.database import user_collection
+from app.db.models.users import UserCreate, UserID, UserInDB, UserUpdateAdmin
 
 
-async def get_all_users():
-    users = await user_collection.find().to_list(None)
-    return [UserRead(**user) for user in users]
-
-
-async def create_user(user: UserCreate):
+async def create_user(user: UserCreate) -> UserID:
     user = jsonable_encoder(user)
-    user['password'] = get_password_hash(user['password'])
+
+    user['hashed_password'] = get_password_hash(user['password'])
+    del user['password']
+
     user['role'] = UserRole.USER.value
 
     new_user = await user_collection.insert_one(user)
     created_user = await user_collection.find_one({'_id': new_user.inserted_id})
 
-    del created_user['password']
-    print(created_user)
+    return UserID(**created_user)
 
-    return UserRead(**created_user)
+
+async def get_all_users() -> List[UserInDB]:
+    users = await user_collection.find().to_list(None)
+    return [UserInDB(**user) for user in users]
+
+
+async def get_single_user(id: str) -> UserInDB:
+    if (user := await user_collection.find_one({'_id': ObjectId(id)})) is not None:
+        return UserInDB(**user)
+    
+    raise HTTPException(status_code=404, detail=f'User {id} not found')
+
+
+async def update_user(id: str, user: UserUpdateAdmin) -> UserInDB:
+    # Исключаем пустые значения
+    user = {k: v for k, v in dict(user).items() if v is not None}
+
+    if 'password' in user:
+        user['hashed_password'] = get_password_hash(user['password'])
+
+    if len(user) >= 1:
+        update_result = await user_collection.update_one({'_id': ObjectId(id)}, {'$set': user})
+
+        if update_result.modified_count == 1:
+            if (
+                updated_user := await user_collection.find_one({'_id': ObjectId(id)})
+            ) is not None:
+                return UserInDB(**updated_user)
+
+    if (existing_user := await user_collection.find_one({'_id': ObjectId(id)})) is not None:
+        return UserInDB(**existing_user)
+
+    raise HTTPException(status_code=404, detail=f'User {id} not found')
