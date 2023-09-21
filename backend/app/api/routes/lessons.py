@@ -5,7 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 from ...db.database import training_collection, lesson_collection
-from ...db.models import Lesson, User
+from ...db.models import Lesson, UserDB
 from ...core.security import get_current_user
 from ...schema.schemas import lessons_to_dict_list
 from ..deps import check_training_access
@@ -30,7 +30,7 @@ async def create_lesson(training_id: str, lesson: Lesson = Body(...)):
 
 # Получить список уроков в тренинге
 @router.get('/trainings/{training_id}/lessons/')
-async def get_lessons(training_id: str, current_user: User = Depends(get_current_user)):
+async def get_lessons(training_id: str, current_user: UserDB = Depends(get_current_user)):
     # Проверяем, есть ли доступ к тренингу
     if not await check_training_access(current_user, training_id):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Access to lessons denied')

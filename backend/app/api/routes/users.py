@@ -10,9 +10,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from ...core.config import settings
 from ...core.security import create_access_token, get_password_hash, verify_password, require_admin_role, get_current_user
 from ...db.database import user_collection
-from ...db.models import Token, User, UserCreate, UserUpdate
-from ...schema.schemas import users_to_dict_list
+from ...db.models import Token, UserRead, UserDB, UserCreate, UserUpdate
 from ...core.roles import UserRole
+from ...services.users import *
 
 
 router = APIRouter()
@@ -20,27 +20,19 @@ router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
-@router.get('/users/', response_description='List all users', response_model=List[User])
-async def list_users(current_user: User = Depends(require_admin_role)):
-    users = await user_collection.find().to_list(None)
+@router.get('/users/', response_description='Get all users', response_model=List[UserRead])
+async def get_all_users_route(current_user: UserRead = Depends(require_admin_role)):
+    users = await get_all_users()
     return users
 
 
-@router.post('/users/', response_description='Create new user', response_model=User)
-async def create_user(user: UserCreate = Body(...)):
-    try:
-        user = jsonable_encoder(user)
-        user['password'] = get_password_hash(user['password'])
-        user['role'] = UserRole.USER.value
-        new_user = await user_collection.insert_one(user)
-        created_user = await user_collection.find_one({'_id': new_user.inserted_id})
-        return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_user)
-    except Exception as e:
-        print(f"Error: {e}")
-        raise
+@router.post('/users/', response_description='Create new user', response_model=UserRead)
+async def create_user_route(user: UserCreate = Body(...)):
+    created_user = await create_user(user)
+    return created_user
 
 
-@router.get('/users/{id}', response_description='Get a single user', response_model=User)
+@router.get('/users/{id}', response_description='Get a single user', response_model=UserRead)
 async def show_user(id: str):
     if (user := await user_collection.find_one({'_id': id})) is not None:
         return user
@@ -49,8 +41,8 @@ async def show_user(id: str):
 
 
 # Обновить все данные о пользователе (включая роль, для администраторов)
-@router.put('/users/{id}', response_description='Update a user', response_model=User)
-async def update_user(id: str, user: UserUpdate = Body(...), current_user: User = Depends(require_admin_role)):
+@router.put('/users/{id}', response_description='Update a user', response_model=UserRead)
+async def update_user(id: str, user: UserUpdate = Body(...), current_user: UserRead = Depends(require_admin_role)):
     user = {k: v for k, v in dict(user).items() if v is not None}
 
     if 'password' in user:
@@ -72,7 +64,7 @@ async def update_user(id: str, user: UserUpdate = Body(...), current_user: User 
 
 
 @router.delete('/users/{id}', response_description='Delete a user')
-async def delete_user(id: str, current_user: User = Depends(require_admin_role)):
+async def delete_user(id: str, current_user: UserRead = Depends(require_admin_role)):
     delete_result = await user_collection.delete_one({'_id': id})
 
     if delete_result.deleted_count == 1:
@@ -81,8 +73,8 @@ async def delete_user(id: str, current_user: User = Depends(require_admin_role))
     raise HTTPException(status_code=404, detail=f'User {id} not found')
 
 
-@router.get('/users/current_user/', response_description='Get current user', response_model=User)
-async def get_current_user_info(current_user: User = Depends(get_current_user)):
+@router.get('/users/current_user/', response_description='Get current user', response_model=UserRead)
+async def get_current_user_info(current_user: UserRead = Depends(get_current_user)):
     return current_user
 
 
@@ -92,8 +84,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Incorrect username or password')
 
-    print(user)
-    user_obj = User(**user)
+    user_obj = UserDB(**user)
     password_verified = verify_password(form_data.password, user_obj.password)
     if not password_verified:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Incorrect username or password')
