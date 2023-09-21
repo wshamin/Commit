@@ -64,6 +64,7 @@ const TrainingList = () => {
                     border: '1px solid gray',
                     marginBottom: '10px',
                     marginLeft: '30px',
+                    marginTop: '30px',
                     padding: '10px',
                     overflow: 'hidden',
                     transition: 'height 0.3s',
