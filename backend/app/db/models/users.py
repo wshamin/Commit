@@ -2,18 +2,20 @@ from typing import Optional
 
 from pydantic import Field, EmailStr
 
-from app.db.models.core import CustomBaseModel, PyObjectId
+from ...db.models.core import CustomBaseModel, PyObjectId
 from ...core.roles import UserRole
 
 
 class UserBase(CustomBaseModel):
-    login: str 
+    first_name: str
+    last_name: str 
     email: EmailStr 
 
     class Config(CustomBaseModel.Config):
         schema_extra = {
             'example': {
-                'login': 'user',
+                'first_name': 'John',
+                'last_name': 'Doe',
                 'email': 'user@example.com'
             }
         }
@@ -36,10 +38,10 @@ class UserInDB(UserBase):
 
     class Config(CustomBaseModel.Config):
         schema_extra = {
-            **UserBase.Config.schema_extra['example'],
             'id': 'string',
+            **UserBase.Config.schema_extra['example'],
             'password': 'string',
-            'role': 'user'
+            'role': UserRole.USER.value
         }
 
 
@@ -50,18 +52,20 @@ class UserID(CustomBaseModel):
     class Config(CustomBaseModel.Config):
         schema_extra = {
             'id': 'string',
-            'role': 'user'
+            'role': UserRole.USER.value
         }
 
 
 class UserUpdate(UserBase):
-    login: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
     email: Optional[EmailStr]
     password: Optional[str]
 
     class Config(UserBase.Config):
         schema_extra = {
-            **UserBase.Config.schema_extra['example']
+            **UserBase.Config.schema_extra['example'],
+            'password': 'string'
         }
 
 
@@ -71,5 +75,6 @@ class UserUpdateAdmin(UserUpdate):
     class Config(CustomBaseModel.Config):
         schema_extra = {
             **UserBase.Config.schema_extra['example'],
-            'role': 'user'
+            'password': 'string',
+            'role': UserRole.USER.value
         }

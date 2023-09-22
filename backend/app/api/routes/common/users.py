@@ -13,7 +13,7 @@ from ....db.database import user_collection
 from ....db.models.core import Token
 from ....db.models.users import UserCreate, UserID, UserInDB
 # from ....core.roles import UserRole
-from ....services.users import create_user
+from ....services.users import check_existing_user, create_user
 
 
 router = APIRouter()
@@ -23,6 +23,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 @router.post('/users/', response_description='Create new user', response_model=UserID)
 async def create_user_route(user: UserCreate = Body(...)):
+    if await check_existing_user(user.email):
+        raise HTTPException(status_code=400, detail="Email already exists")
+
     created_user = await create_user(user)
     return created_user
 #
