@@ -3,7 +3,6 @@ from typing import Optional
 from pydantic import Field, EmailStr
 
 from ...db.models.core import CustomBaseModel, PyObjectId
-from ...core.roles import UserRole
 
 
 class UserBase(CustomBaseModel):
@@ -34,25 +33,25 @@ class UserCreate(UserBase):
 class UserInDB(UserBase):
     id: PyObjectId = Field(alias='_id')
     hashed_password: str
-    role: UserRole
+    role: str
 
     class Config(CustomBaseModel.Config):
         schema_extra = {
             'id': 'string',
             **UserBase.Config.schema_extra['example'],
             'password': 'string',
-            'role': UserRole.USER.value
+            'role': 'user'
         }
 
 
 class UserID(CustomBaseModel):
     id: PyObjectId = Field(alias='_id')
-    role: UserRole
+    role: str
 
     class Config(CustomBaseModel.Config):
         schema_extra = {
             'id': 'string',
-            'role': UserRole.USER.value
+            'role': 'user'
         }
 
 
@@ -70,11 +69,11 @@ class UserUpdate(UserBase):
 
 
 class UserUpdateAdmin(UserUpdate):
-    role: Optional[UserRole]
+    role: Optional[str]
 
     class Config(CustomBaseModel.Config):
         schema_extra = {
             **UserBase.Config.schema_extra['example'],
             'password': 'string',
-            'role': UserRole.USER.value
+            'role': 'user'
         }

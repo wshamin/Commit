@@ -10,7 +10,6 @@ from app.db.models.users import UserID
 from .config import settings
 from app.db.models.core import TokenData
 from ..db.database import user_collection
-from ..core.roles import UserRole
 
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -69,6 +68,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 
 def require_admin_role(current_user: UserID = Depends(get_current_user)):
-    if current_user.role != UserRole.ADMIN:
+    if current_user.role != 'admin':
         raise HTTPException(status_code=403, detail="Not enough permissions")
     return current_user
