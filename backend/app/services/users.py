@@ -29,6 +29,16 @@ async def create_user(user: UserCreate) -> UserID:
     return UserID(**created_user)
 
 
+async def delete_user(id: str):
+    print(id)
+    delete_result = await user_collection.delete_one({'_id': ObjectId(id)})
+
+    if delete_result.deleted_count == 1:
+        return
+
+    raise HTTPException(status_code=404, detail=f'User {id} not found')
+
+
 async def get_all_users() -> List[UserInDB]:
     users = await user_collection.find().to_list(None)
     return [UserInDB(**user) for user in users]

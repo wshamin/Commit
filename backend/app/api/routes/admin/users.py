@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 
 from ....core.security import require_admin_role
 from app.db.models.users import UserID, UserInDB, UserUpdateAdmin
-from app.services.users import get_all_users, get_single_user, update_user
+from app.services.users import delete_user, get_all_users, get_single_user, update_user
 
 
 router = APIRouter()
@@ -32,3 +32,9 @@ async def update_user_route(
         current_user: UserID = Depends(require_admin_role)):
     updated_user = await update_user(id, user)
     return updated_user
+
+
+@router.delete('/users/{id}', response_description='Delete a user', status_code=204)
+async def delete_user_route(id: str, current_user: UserID = Depends(require_admin_role)):
+    delete_result = await delete_user(id)
+    return

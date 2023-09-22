@@ -13,7 +13,7 @@ from ....db.database import user_collection
 from ....db.models.core import Token
 from ....db.models.users import UserCreate, UserID, UserInDB
 # from ....core.roles import UserRole
-from ....services.users import check_existing_user, create_user
+from ....services.users import check_existing_user, create_user, get_single_user
 
 
 router = APIRouter()
@@ -28,22 +28,11 @@ async def create_user_route(user: UserCreate = Body(...)):
 
     created_user = await create_user(user)
     return created_user
+
+
 #
 #
-# @router.get('/users/{id}', response_description='Get a current user', response_model=UserRead)
-# async def get_current_user(id: str, current_user: UserRead = Depends(require_admin_role)):
-#     user = await get_single_user(id)
-#     return user
-#
-#
-# @router.delete('/users/{id}', response_description='Delete a user')
-# async def delete_user(id: str, current_user: UserRead = Depends(require_admin_role)):
-#     delete_result = await user_collection.delete_one({'_id': id})
-#
-#     if delete_result.deleted_count == 1:
-#         return Response(status_code=status.HTTP_204_NO_CONTENT)
-#
-#     raise HTTPException(status_code=404, detail=f'User {id} not found')
+
 #
 #
 # @router.get('/users/current_user/', response_description='Get current user', response_model=UserRead)
