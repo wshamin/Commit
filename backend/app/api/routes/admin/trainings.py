@@ -4,14 +4,14 @@ from fastapi import APIRouter, Depends
 
 from ....core.security import require_admin_role
 from ....db.models.trainings import TrainingInDB
-from ....db.models.users import UserID
+from ....db.models.users import User
 from ....services.trainings import get_all_trainings
 
 router = APIRouter()
 
 
-@router.get('/trainings/', response_description='Get all trainings', response_model=List[TrainingInDB])
-async def get_all_trainings_route(current_user: UserID = Depends(require_admin_role)):
+@router.get('/', response_description='Get all trainings', response_model=List[TrainingInDB])
+async def get_all_trainings_route(current_user: User = Depends(require_admin_role)):
     trainings = await get_all_trainings()
     return trainings
 

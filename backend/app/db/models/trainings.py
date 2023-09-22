@@ -18,24 +18,22 @@ class TrainingBase(CustomBaseModel):
         }
 
 
-class TrainingInDB(TrainingBase):
-    id: PyObjectId = Field(alias='_id')
-    owner_id: PyObjectId
-
-    class Config(CustomBaseModel.Config):
-        schema_extra = {
-            'id': 'string',
-            'owner_id': 'string',
-            **TrainingBase.Config.schema_extra['example']
-        }
-
-
-class TrainingID(CustomBaseModel):
+class Training(TrainingBase):
     id: PyObjectId = Field(alias='_id')
 
     class Config(CustomBaseModel.Config):
         schema_extra = {
             'id': 'string'
+        }
+
+
+class TrainingInDB(Training):
+    owner_id: PyObjectId
+
+    class Config(CustomBaseModel.Config):
+        schema_extra = {
+            **TrainingBase.Config.schema_extra['example'],
+            'owner_id': 'string',
         }
 
 
@@ -54,6 +52,6 @@ class TrainingUpdateAdmin(TrainingUpdate):
 
     class Config(CustomBaseModel.Config):
         schema_extra = {
-            'owner_id': 'string',
-            **TrainingBase.Config.schema_extra['example']
+            **TrainingBase.Config.schema_extra['example'],
+            'owner_id': 'string'
         }

@@ -7,7 +7,7 @@ from fastapi.encoders import jsonable_encoder
 from app.core.roles import UserRole
 from app.core.security import get_password_hash
 from app.db.database import user_collection
-from app.db.models.users import UserCreate, UserID, UserInDB, UserUpdateAdmin
+from app.db.models.users import UserCreate, User, UserInDB, UserUpdateAdmin
 
 
 async def is_user_exist(email: str) -> bool:
@@ -15,10 +15,10 @@ async def is_user_exist(email: str) -> bool:
     return bool(existing_user)
 
 
-async def create_user(user: UserCreate) -> UserID:
+async def create_user(user: UserCreate) -> User:
     user = jsonable_encoder(user)
 
-    if is_user_exist(user.email):
+    if await is_user_exist(user['email']):
         raise HTTPException(status_code=409, detail=f'Email {user.email} is already registered')
 
     user['hashed_password'] = get_password_hash(user['password'])
@@ -29,7 +29,7 @@ async def create_user(user: UserCreate) -> UserID:
     new_user = await user_collection.insert_one(user)
     created_user = await user_collection.find_one({'_id': new_user.inserted_id})
 
-    return UserID(**created_user)
+    return User(**created_user)
 
 
 async def delete_user(id: str):

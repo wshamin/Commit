@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from bson import ObjectId
 
-from app.db.models.users import UserID
+from app.db.models.users import User
 
 from .config import settings
 from app.db.models.core import TokenData
@@ -14,7 +14,7 @@ from ..db.database import user_collection
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token/')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='user/token/')
 
 
 def verify_password(plain_password: str, hashed_password: str):
@@ -56,7 +56,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
 
-    return UserID(**user)
+    return User(**user)
 
 
 # def require_permission(permission: UserPermission):
@@ -67,7 +67,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 #     return decorator
 
 
-def require_admin_role(current_user: UserID = Depends(get_current_user)):
+def require_admin_role(current_user: User = Depends(get_current_user)):
     if current_user.role != 'admin':
         raise HTTPException(status_code=403, detail="Not enough permissions")
     return current_user

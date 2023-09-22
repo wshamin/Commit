@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Body, HTTPException, Depends, status
 from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
@@ -5,50 +7,24 @@ from fastapi.responses import JSONResponse
 
 from ....core.security import get_current_user
 from ....db.database import training_collection, training_access_collection, user_collection
-from ....db.models.trainings import TrainingBase
-from ....db.models.users import UserID
-from ....services.trainings import create_training
+from ....db.models.trainings import Training
+from ....db.models.users import User
+from ....services.trainings import create_training, get_trainings
 
 
 router = APIRouter()
 
 
-@router.post('/trainings/', response_description='Create new training', response_model=TrainingBase)
-async def create_training_route(training: TrainingBase, current_user: UserID = Depends(get_current_user)):
+@router.post('/', response_description='Create new training', response_model=Training)
+async def create_training_route(training: Training, current_user: User = Depends(get_current_user)):
     created_training = await create_training(training, current_user)
     return created_training
 
 
-# # Получить список тренингов (для отображения на дашборде пользователя)
-# @router.get('/trainings/')
-# async def get_trainings(current_user: User = Depends(get_current_user)):
-#     user_id_str = str(current_user.id)
-
-#     # Получаем ID тренингов, к которым у пользователя есть доступ или которые принадлежат пользователю
-#     accessible_trainings_cursor = training_access_collection.find({'user_id': user_id_str})
-#     owned_trainings_cursor = training_collection.find({'owner_id': user_id_str})
-
-#     # Используем set для хранения ID, чтобы избежать дубликатов
-#     accessible_training_ids = set()
-
-#     async for training in accessible_trainings_cursor:
-#         accessible_training_ids.add(training['training_id'])
-
-#     async for training in owned_trainings_cursor:
-#         accessible_training_ids.add(str(training['_id']))
-
-#     # Запрашиваем все тренинги на основе списка ID
-#     trainings = await training_collection.find({'_id': {'$in': list(accessible_training_ids)}}).to_list(None)
-#     return trainings_to_dict_list(trainings)
-
-
-# # Получить материалы из тренинга
-# @router.get('/trainings/{training_id}/', response_model=Training)
-# async def get_training_by_id(training_id: str):
-#     if (training := await training_collection.find_one({'_id': training_id})) is not None:
-#         return training
-    
-#     raise HTTPException(status_code=404, detail=f'Training {id} not found')
+@router.get('/', response_description='Get avaliable trainings', response_model=List[Training])
+async def get_trainings_route(current_user: User = Depends(get_current_user)):
+    trainings = await get_trainings(current_user)
+    return trainings
 
 
 # # Выдать доступ к тренингу другому пользователю

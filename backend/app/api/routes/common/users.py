@@ -11,7 +11,7 @@ from ....core.config import settings
 from ....core.security import create_access_token, get_password_hash, verify_password, require_admin_role, get_current_user
 from ....db.database import user_collection
 from ....db.models.core import Token
-from ....db.models.users import UserCreate, UserID, UserInDB
+from ....db.models.users import UserCreate, User, UserInDB
 # from ....core.roles import UserRole
 from ....services.users import create_user
 
@@ -21,7 +21,7 @@ router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 
-@router.post('/users/', response_description='Create new user', response_model=UserID)
+@router.post('/', response_description='Create new user', response_model=User)
 async def create_user_route(user: UserCreate = Body(...)):
     created_user = await create_user(user)
     return created_user

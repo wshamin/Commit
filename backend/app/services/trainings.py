@@ -3,12 +3,12 @@ from typing import List
 from fastapi import Body, Depends
 from fastapi.encoders import jsonable_encoder
 
-from ..db.database import training_collection, user_collection
-from ..db.models.trainings import TrainingBase, TrainingInDB
-from ..db.models.users import UserID
+from ..db.database import training_access_collection, training_collection, user_collection
+from ..db.models.trainings import TrainingBase, Training, TrainingInDB
+from ..db.models.users import User
 
 
-async def create_training(training: TrainingBase, current_user: UserID) -> TrainingBase:
+async def create_training(training: TrainingBase, current_user: User) -> Training:
     training = jsonable_encoder(training)
 
     training['owner_id'] = current_user.id
@@ -16,7 +16,7 @@ async def create_training(training: TrainingBase, current_user: UserID) -> Train
     new_training = await training_collection.insert_one(training)
     created_training = await training_collection.find_one({'_id': new_training.inserted_id})
 
-    return TrainingBase(**created_training)
+    return Training(**created_training)
 
 
 async def get_all_trainings() -> List[TrainingInDB]:
@@ -29,3 +29,23 @@ async def get_all_trainings() -> List[TrainingInDB]:
         trainings_with_owner_email.append(training)
     
     return [TrainingInDB(**training) for training in trainings]
+
+
+# Получить список тренингов (для отображения на дашборде пользователя)
+async def get_trainings(current_user: User) -> List[Training]:
+    # Получаем ID тренингов, к которым у пользователя есть доступ или которые принадлежат пользователю
+    accessible_trainings_cursor = training_access_collection.find({'user_id': current_user.id})
+    owned_trainings_cursor = training_collection.find({'owner_id': current_user.id})
+
+    # Используем set для хранения ID, чтобы избежать дубликатов
+    accessible_training_ids = set()
+
+    async for training in accessible_trainings_cursor:
+        accessible_training_ids.add(training['training_id'])
+
+    async for training in owned_trainings_cursor:
+        accessible_training_ids.add(training['_id'])
+
+    # Запрашиваем все тренинги на основе списка ID
+    trainings = await training_collection.find({'_id': {'$in': list(accessible_training_ids)}}).to_list(None)
+    return [Training(**training) for training in trainings]

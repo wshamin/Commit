@@ -28,31 +28,29 @@ class UserCreate(UserBase):
             **UserBase.Config.schema_extra['example'],
             'password': 'string'
             }
+        
 
-
-class UserInDB(UserBase):
+class User(UserBase):
     id: PyObjectId = Field(alias='_id')
-    hashed_password: str
     role: str
 
-    class Config(CustomBaseModel.Config):
+    class Config(UserBase.Config):
         schema_extra = {
-            'id': 'string',
             **UserBase.Config.schema_extra['example'],
-            'password': 'string',
-            'role': 'user'
-        }
-
-
-class UserID(CustomBaseModel):
-    id: PyObjectId = Field(alias='_id')
-    role: str
-
-    class Config(CustomBaseModel.Config):
-        schema_extra = {
             'id': 'string',
             'role': 'user'
         }
+
+
+class UserInDB(User):
+    hashed_password: str
+
+    class Config(CustomBaseModel.Config):
+        schema_extra = {
+            **User.Config.schema_extra,
+            'hashed_password': 'string'
+        }
+
 
 
 class UserUpdate(UserBase):
@@ -74,6 +72,5 @@ class UserUpdateAdmin(UserUpdate):
     class Config(CustomBaseModel.Config):
         schema_extra = {
             **UserBase.Config.schema_extra['example'],
-            'password': 'string',
             'role': 'user'
         }
