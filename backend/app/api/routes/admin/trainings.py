@@ -1,19 +1,19 @@
-from fastapi import APIRouter
+from typing import List
+
+from fastapi import APIRouter, Depends
+
+from ....core.security import require_admin_role
+from ....db.models.trainings import TrainingInDB
+from ....db.models.users import UserID
+from ....services.trainings import get_all_trainings
 
 router = APIRouter()
 
 
-# @router.get('/admin/trainings/', response_description='Get all trainings', response_model=List[dict])
-# async def get_all_trainings(current_user: User = Depends(require_admin_role)):
-#     trainings = await training_collection.find().to_list(None)
-#     trainings_with_owner_email = []
-    
-#     for training in trainings:
-#         owner = await user_collection.find_one({"_id": training["owner_id"]})
-#         training["owner_email"] = owner["email"]
-#         trainings_with_owner_email.append(training)
-    
-#     return trainings_with_owner_email
+@router.get('/trainings/', response_description='Get all trainings', response_model=List[TrainingInDB])
+async def get_all_trainings_route(current_user: UserID = Depends(require_admin_role)):
+    trainings = await get_all_trainings()
+    return trainings
 
 
 # @router.put('/admin/trainings/{id}', response_description='Update a training', response_model=Training)

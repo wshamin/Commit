@@ -3,24 +3,20 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-# from ....db.database import training_collection, training_access_collection, user_collection
-# from ....db.models import Training, TrainingAccess, UserDB, PyObjectId, GrantAccessRequest
-# from ....schema.schemas import trainings_to_dict_list
-# from ....core.security import get_current_user
-# from ...deps import is_training_owner
+from ....core.security import get_current_user
+from ....db.database import training_collection, training_access_collection, user_collection
+from ....db.models.trainings import TrainingBase
+from ....db.models.users import UserID
+from ....services.trainings import create_training
 
 
 router = APIRouter()
 
 
-# # Создать тренинг
-# @router.post('/trainings/', response_description='Create new training', response_model=Training)
-# async def create_training(training: Training = Body(...), current_user: User = Depends(get_current_user)):
-#     training = jsonable_encoder(training)
-#     training['owner_id'] = str(current_user.id)
-#     new_training = await training_collection.insert_one(training)
-#     created_training = await training_collection.find_one({'_id': new_training.inserted_id})
-#     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_training)
+@router.post('/trainings/', response_description='Create new training', response_model=TrainingBase)
+async def create_training_route(training: TrainingBase, current_user: UserID = Depends(get_current_user)):
+    created_training = await create_training(training, current_user)
+    return created_training
 
 
 # # Получить список тренингов (для отображения на дашборде пользователя)

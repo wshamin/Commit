@@ -10,13 +10,16 @@ from app.db.database import user_collection
 from app.db.models.users import UserCreate, UserID, UserInDB, UserUpdateAdmin
 
 
-async def check_existing_user(email: str) -> bool:
+async def is_user_exist(email: str) -> bool:
     existing_user = await user_collection.find_one({"email": email})
     return bool(existing_user)
 
 
 async def create_user(user: UserCreate) -> UserID:
     user = jsonable_encoder(user)
+
+    if is_user_exist(user.email):
+        raise HTTPException(status_code=409, detail=f'Email {user.email} is already registered')
 
     user['hashed_password'] = get_password_hash(user['password'])
     del user['password']
