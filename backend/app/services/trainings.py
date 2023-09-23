@@ -1,9 +1,12 @@
 from typing import List
 
-from fastapi import Body, Depends
+from bson import ObjectId
+from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 
+from ..api.deps import is_training_exist
 from ..db.database import training_access_collection, training_collection, user_collection
+from ..db.models.core import MongoID
 from ..db.models.trainings import TrainingBase, Training, TrainingInDB
 from ..db.models.users import User
 
@@ -17,6 +20,15 @@ async def create_training(training: TrainingBase, current_user: User) -> Trainin
     created_training = await training_collection.find_one({'_id': new_training.inserted_id})
 
     return Training(**created_training)
+
+
+async def delete_training(training: MongoID):
+    result = await training_collection.delete_one({'_id': training.object_id})
+
+    if result.deleted_count == 1:
+        return
+    
+    raise HTTPException(status_code=404, detail=f'Training {id} not found')
 
 
 async def get_all_trainings() -> List[TrainingInDB]:

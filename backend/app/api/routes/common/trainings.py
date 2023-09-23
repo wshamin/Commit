@@ -1,22 +1,20 @@
 from typing import List
 
-from fastapi import APIRouter, Body, HTTPException, Depends, status
-from bson import ObjectId
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends
 
 from ....core.security import get_current_user
 from ....db.database import training_collection, training_access_collection, user_collection
-from ....db.models.trainings import Training
+from ....db.models.core import PyObjectId
+from ....db.models.trainings import Training, TrainingBase
 from ....db.models.users import User
-from ....services.trainings import create_training, get_trainings
+from ....services.trainings import create_training, delete_training, get_trainings
 
 
 router = APIRouter()
 
 
 @router.post('/', response_description='Create new training', response_model=Training)
-async def create_training_route(training: Training, current_user: User = Depends(get_current_user)):
+async def create_training_route(training: TrainingBase, current_user: User = Depends(get_current_user)):
     created_training = await create_training(training, current_user)
     return created_training
 

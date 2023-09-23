@@ -22,9 +22,9 @@ app.add_middleware(
     expose_headers=['Content-Range', 'Date', 'Server', 'Transfer-Encoding']
 )
 
-app.include_router(user_router, prefix='/api/user', tags=['Regular users'])
+app.include_router(user_router, prefix='/api/user', tags=['Users'])
 app.include_router(training_router, prefix='/api/training', tags=['Trainings'])
 # app.include_router(upload_router, prefix='/api', tags=['uploads'])
 # app.include_router(lesson_router, prefix='/api', tags=['lessons'])
-app.include_router(admin_training_router, prefix='/api/admin/training', tags=['Admin functions for trainings'])
-app.include_router(admin_user_router, prefix='/api/admin/user', tags=['Admin functions for users'])
+app.include_router(admin_user_router, prefix='/api/admin/user', tags=['Users Admin'])
+app.include_router(admin_training_router, prefix='/api/admin/training', tags=['Training Admin'])

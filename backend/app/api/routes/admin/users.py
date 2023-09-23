@@ -36,5 +36,5 @@ async def update_user_route(
 
 @router.delete('/{id}', response_description='Delete a user', status_code=204)
 async def delete_user_route(id: str, current_user: User = Depends(require_admin_role)):
-    delete_result = await delete_user(id)
+    await delete_user(id)
     return

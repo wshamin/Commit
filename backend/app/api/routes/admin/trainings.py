@@ -3,9 +3,10 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from ....core.security import require_admin_role
+from ....db.models.core import MongoID
 from ....db.models.trainings import TrainingInDB
 from ....db.models.users import User
-from ....services.trainings import get_all_trainings
+from ....services.trainings import delete_training, get_all_trainings
 
 router = APIRouter()
 
@@ -14,6 +15,12 @@ router = APIRouter()
 async def get_all_trainings_route(current_user: User = Depends(require_admin_role)):
     trainings = await get_all_trainings()
     return trainings
+
+
+@router.delete('/', response_description="Delete a training", status_code=204)
+async def delete_training_route(training: MongoID, current_user: User = Depends(require_admin_role)):
+    await delete_training(training)
+    return
 
 
 # @router.put('/admin/trainings/{id}', response_description='Update a training', response_model=Training)

@@ -26,6 +26,21 @@ class CustomBaseModel(BaseModel):
         json_encoders = {ObjectId: str}
 
 
+class MongoID(CustomBaseModel):
+    id: PyObjectId = Field(alias='_id')
+
+    class Config(CustomBaseModel.Config):
+        schema_extra = {
+            'example': {
+                'id': '507c7f79bcf86cd7994f6c0e'
+            }
+        }
+
+    @property
+    def object_id(self) -> ObjectId:
+        return ObjectId(self.id)
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -35,41 +50,6 @@ class TokenData(BaseModel):
     user_id: Optional[str] = None
 
 
-# class Training(BaseModel):
-#     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-#     owner_id: Optional[PyObjectId] = None
-#     title: str = Field(...)
-#     description: str = Field(...)
-#
-#     class Config:
-#         allow_population_by_field_name = True
-#         arbitrary_types_allowed = True
-#         json_encoders = {ObjectId: str}
-#         schema_extra = {
-#             "example": {
-#                 "owner_id": "64fdbdf67849e5a51f37fa39",
-#                 "title": "Training Example",
-#                 "description": "Description for training example",
-#             }
-#         }
-#
-#
-# class TrainingUpdate(BaseModel):
-#     owner_id: Optional[PyObjectId]
-#     owner_email: Optional[str]
-#     title: Optional[str]
-#     description: Optional[str]
-#
-#     class Config:
-#         arbitrary_types_allowed = True
-#         json_encoders = {ObjectId: str}
-#         schema_extra = {
-#             "example": {
-#                 "owner_id": "64fdbdf67849e5a51f37fa39",
-#                 "title": "Training Example",
-#                 "description": "Description for training example",
-#             }
-#         }
 #
 #
 # class TrainingAccess(BaseModel):

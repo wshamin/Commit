@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import Field, EmailStr
 
-from ...db.models.core import CustomBaseModel, PyObjectId
+from ...db.models.core import CustomBaseModel, MongoID, PyObjectId
 
 
 class TrainingBase(CustomBaseModel):
@@ -18,22 +18,25 @@ class TrainingBase(CustomBaseModel):
         }
 
 
-class Training(TrainingBase):
-    id: PyObjectId = Field(alias='_id')
-
-    class Config(CustomBaseModel.Config):
+class Training(MongoID, TrainingBase):
+    class Config(MongoID.Config, TrainingBase.Config):
         schema_extra = {
-            'id': 'string'
+            'example': {
+                **MongoID.Config.schema_extra['example'],
+                **TrainingBase.Config.schema_extra['example']
+            }
         }
 
 
 class TrainingInDB(Training):
     owner_id: PyObjectId
 
-    class Config(CustomBaseModel.Config):
+    class Config(Training.Config):
         schema_extra = {
-            **TrainingBase.Config.schema_extra['example'],
-            'owner_id': 'string',
+            'example': {
+                **Training.Config.schema_extra,
+                'owner_id': '507c7f79bcf86cd7994f6c0e'
+            }
         }
 
 
@@ -43,15 +46,19 @@ class TrainingUpdate(TrainingBase):
 
     class Config(TrainingBase.Config):
         schema_extra = {
-            **TrainingBase.Config.schema_extra['example']
+            'example': {
+                **TrainingBase.Config.schema_extra['example']
+            }
         }
 
 
 class TrainingUpdateAdmin(TrainingUpdate):
     owner_id: Optional[PyObjectId]
 
-    class Config(CustomBaseModel.Config):
+    class Config(TrainingUpdate.Config):
         schema_extra = {
-            **TrainingBase.Config.schema_extra['example'],
-            'owner_id': 'string'
+            'example': {
+                **TrainingUpdate.Config.schema_extra,
+                'owner_id': '507c7f79bcf86cd7994f6c0e'
+            }
         }
