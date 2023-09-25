@@ -1,18 +1,13 @@
 from datetime import timedelta
-# from typing import List
 
-from bson import ObjectId
 from fastapi import APIRouter, Body, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from ....core.config import settings
-from ....core.security import create_access_token, get_password_hash, verify_password, require_admin_role, get_current_user
+from ....core.security import create_access_token, verify_password
 from ....db.database import user_collection
 from ....db.models.core import Token
 from ....db.models.users import UserCreate, User, UserInDB
-# from ....core.roles import UserRole
 from ....services.users import create_user
 
 
@@ -25,18 +20,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 async def create_user_route(user: UserCreate = Body(...)):
     created_user = await create_user(user)
     return created_user
-
-
-#
-#
-
-#
-#
-# @router.get('/users/current_user/', response_description='Get current user', response_model=UserRead)
-# async def get_current_user_info(current_user: UserRead = Depends(get_current_user)):
-#     return current_user
-#
-#
 
 
 @router.post('/token/')

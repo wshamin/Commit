@@ -18,11 +18,13 @@ class TrainingBase(CustomBaseModel):
         }
 
 
-class Training(MongoID, TrainingBase):
-    class Config(MongoID.Config, TrainingBase.Config):
+class Training(TrainingBase):
+    id: PyObjectId = Field(alias='_id')
+
+    class Config(TrainingBase.Config):
         schema_extra = {
             'example': {
-                **MongoID.Config.schema_extra['example'],
+                'id': '507c7f79bcf86cd7994f6c0e',
                 **TrainingBase.Config.schema_extra['example']
             }
         }
@@ -34,7 +36,7 @@ class TrainingInDB(Training):
     class Config(Training.Config):
         schema_extra = {
             'example': {
-                **Training.Config.schema_extra,
+                **Training.Config.schema_extra['example'],
                 'owner_id': '507c7f79bcf86cd7994f6c0e'
             }
         }
@@ -58,7 +60,7 @@ class TrainingUpdateAdmin(TrainingUpdate):
     class Config(TrainingUpdate.Config):
         schema_extra = {
             'example': {
-                **TrainingUpdate.Config.schema_extra,
+                **TrainingUpdate.Config.schema_extra['example'],
                 'owner_id': '507c7f79bcf86cd7994f6c0e'
             }
         }

@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends
 
 from ...deps import is_training_owner
 from ....core.security import get_current_user
-from ....db.models.core import MongoID
-from ....db.models.trainings import Training, TrainingBase, TrainingInDB
+from ....db.models.core import PyObjectId
+from ....db.models.trainings import Training, TrainingBase
 from ....db.models.users import User
 from ....services.trainings import create_training, delete_training, get_trainings
 
@@ -25,9 +25,9 @@ async def get_trainings_route(current_user: User = Depends(get_current_user)):
     return trainings
 
 
-@router.delete('/', response_description="Delete a training", status_code=204)
-async def delete_training_route(training_id: MongoID = Depends(is_training_owner)):
-    await delete_training(training_id)
+@router.delete('/{id}', response_description="Delete a training", status_code=204)
+async def delete_training_route(id: PyObjectId = Depends(is_training_owner)):
+    await delete_training(id)
     return
 
 
