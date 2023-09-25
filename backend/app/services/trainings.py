@@ -1,10 +1,8 @@
 from typing import List
 
-from bson import ObjectId
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 
-from ..api.deps import is_training_exist
 from ..db.database import training_access_collection, training_collection, user_collection
 from ..db.models.core import MongoID
 from ..db.models.trainings import TrainingBase, Training, TrainingInDB
@@ -22,8 +20,8 @@ async def create_training(training: TrainingBase, current_user: User) -> Trainin
     return Training(**created_training)
 
 
-async def delete_training(training: MongoID):
-    result = await training_collection.delete_one({'_id': training.object_id})
+async def delete_training(training_id: MongoID):
+    result = await training_collection.delete_one({'_id': training_id.id})
 
     if result.deleted_count == 1:
         return
@@ -33,19 +31,13 @@ async def delete_training(training: MongoID):
 
 async def get_all_trainings() -> List[TrainingInDB]:
     trainings = await training_collection.find().to_list(None)
-    trainings_with_owner_email = []
-    
-    for training in trainings:
-        owner = await user_collection.find_one({'_id': training['owner_id']})
-        training['owner_email'] = owner['email']
-        trainings_with_owner_email.append(training)
     
     return [TrainingInDB(**training) for training in trainings]
 
 
 # Получить список тренингов (для отображения на дашборде пользователя)
 async def get_trainings(current_user: User) -> List[Training]:
-    # Получаем ID тренингов, к которым у пользователя есть доступ или которые принадлежат пользователю
+    # Получаем ID тренингов, к которым у пользователя есть доступ, или принадлежат пользователю
     accessible_trainings_cursor = training_access_collection.find({'user_id': current_user.id})
     owned_trainings_cursor = training_collection.find({'owner_id': current_user.id})
 

@@ -52,7 +52,6 @@ class UserInDB(User):
         }
 
 
-
 class UserUpdate(UserBase):
     first_name: Optional[str]
     last_name: Optional[str]

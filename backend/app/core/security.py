@@ -59,14 +59,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return User(**user)
 
 
-# def require_permission(permission: UserPermission):
-#     def decorator(current_user: User = Depends(get_current_user)):
-#         if permission not in ROLE_PERMISSIONS[current_user.role]:
-#             raise HTTPException(status_code=403, detail="Not enough permissions")
-#         return current_user
-#     return decorator
-
-
 def require_admin_role(current_user: User = Depends(get_current_user)):
     if current_user.role != 'admin':
         raise HTTPException(status_code=403, detail="Not enough permissions")

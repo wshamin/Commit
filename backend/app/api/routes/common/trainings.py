@@ -4,9 +4,8 @@ from fastapi import APIRouter, Depends
 
 from ...deps import is_training_owner
 from ....core.security import get_current_user
-from ....db.database import training_collection, training_access_collection, user_collection
 from ....db.models.core import MongoID
-from ....db.models.trainings import Training, TrainingBase
+from ....db.models.trainings import Training, TrainingBase, TrainingInDB
 from ....db.models.users import User
 from ....services.trainings import create_training, delete_training, get_trainings
 
@@ -20,22 +19,17 @@ async def create_training_route(training: TrainingBase, current_user: User = Dep
     return created_training
 
 
-@router.get('/', response_description='Get avaliable trainings', response_model=List[Training])
+@router.get('/', response_description='Get available trainings', response_model=List[Training])
 async def get_trainings_route(current_user: User = Depends(get_current_user)):
     trainings = await get_trainings(current_user)
     return trainings
 
 
-# @router.delete('/', response_description="Delete a training", status_code=204)
-# async def delete_training_route(training: MongoID, current_user: User = Depends(get_current_user)):
-#     await delete_training(training)
-#     return
-
-
 @router.delete('/', response_description="Delete a training", status_code=204)
-async def delete_training_route(training: MongoID, owner: User = Depends(is_training_owner)):
-    await delete_training(training)
+async def delete_training_route(training_id: MongoID = Depends(is_training_owner)):
+    await delete_training(training_id)
     return
+
 
 
 # # Выдать доступ к тренингу другому пользователю
